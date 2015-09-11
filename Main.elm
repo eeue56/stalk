@@ -15,24 +15,38 @@ import Model exposing (..)
 import Drawing exposing (..)
 
 
-defaultPatch = { pcolor = black }
-redPatch = { pcolor = red }
-colorPatch color = { pcolor = color } 
+defaultPatch x y = { pcolor = black, pxcor = x, pycor = y }
+redPatch x y = { pcolor = red, pxcor = x, pycor = y }
+colorPatch color x y = { pcolor = color, pxcor = x, pycor = y } 
+
+defaultPatches width height = 
+  let
+    board = List.map (\x -> List.map (\y -> defaultPatch x y) [0..width]) [0..height]
+  in
+    case Matrix.fromList board of
+      Just v -> v
+      Nothing -> Matrix.empty
 
 commands : CommandLibrary
 commands = Dict.fromList
   [("clear", always Clear),
    ("still", always Still),
    ("set-pcolor", SetPcolor),
-   ("failed", always Failed)
+   ("failed", always Failed),
+   ("log-patch", LogPatch)
   ]
 
 clearPatches : Model -> Model 
 clearPatches model =
   let
     (width, height) = model.patches.size
+    board = List.map (\x -> List.map (\y -> defaultPatch x y) [0..width]) [0..height]
   in
-    { model | patches <- Matrix.repeat width height defaultPatch }
+    { model | patches <- 
+      case Matrix.fromList board of
+        Just v -> v
+        Nothing -> Matrix.empty
+        }
 
 findCommand : String -> CommandLibrary -> Command
 findCommand text dict =
@@ -58,6 +72,10 @@ findCommand text dict =
             Nothing -> Failed
           Nothing -> Failed
 
+alwaysOk v = case String.toInt v of 
+  Ok x -> x
+  Err _ -> log "Incorrect convert" 0
+
 -- TODO: add to elm-simple-data
 rgbFromList vals = 
   let
@@ -65,9 +83,7 @@ rgbFromList vals =
     g = log "val" <| alwaysOk <| (\x -> case List.head x of Just v -> v) 
       <| (case List.tail vals of Just v -> v)
     b = log "val" <| alwaysOk <| case List.head <| List.reverse vals of Just v -> v
-    alwaysOk v = case String.toInt v of 
-      Ok x -> x
-      Err _ -> log "Incorrect convert" 0
+    
   in
     rgb r g b
 
@@ -81,12 +97,25 @@ setPcolor color model =
       newColor = if myHead == "red" then red else black
       (width, height) = model.patches.size
     in
-      { model | patches <- Matrix.repeat width height <| colorPatch newColor }
+      { model | patches <- Matrix.map (\x -> { x | pcolor <- newColor }) model.patches }
   else
     let
       (width, height) = model.patches.size 
+      newColor = rgbFromList color
     in
-      { model | patches <- Matrix.repeat width height <| colorPatch <| rgbFromList color }
+      { model | patches <- Matrix.map (\x -> { x | pcolor <- newColor }) model.patches }
+
+logPatch : Argument -> Model -> Model
+logPatch args model =
+  let 
+    i = alwaysOk <| case List.head args of Just x -> x
+    j = alwaysOk <| case List.head <| List.reverse args of Just x -> x
+    patch = case Matrix.get i j model.patches of 
+      Just v -> log "Patch is: " v
+      Nothing -> log "erm" (case Matrix.get 0 0 model.patches of Just v -> v)
+  in
+    (log <| toString <| patch) 
+      |> (\_ -> model)
 
 
 update : Command -> Model -> Model
@@ -94,19 +123,15 @@ update command model =
   case command of
     Clear -> clearPatches model
     UpdateText x -> { model | enteredText <- x } 
-    SetPcolor color -> 
-      setPcolor color model
+    SetPcolor color -> setPcolor color model
+    LogPatch coors -> logPatch coors model
     Enter -> 
       let
         commands = List.map (\x -> findCommand x model.commands) <| String.lines model.enteredText 
       in
         List.foldl (update) model commands
     Still -> model
-    Failed ->
-      let
-        (width, height) = model.patches.size
-      in
-        { model | patches <- Matrix.repeat width height <| colorPatch green }
+    Failed -> log "Failed" model
 
 
 drawWorld model =
@@ -115,11 +140,11 @@ drawWorld model =
 model' : Model
 model' = {
   enteredText = "",
-  patches = Matrix.repeat 5 5 (defaultPatch),
+  patches = defaultPatches 25 25,
   commands = commands,
-  width = 500,
-  height = 500,
-  patchSize = 500 / 5 }
+  width = 750,
+  height = 750,
+  patchSize =  750 / 25 }
 
 enteredCommands : Signal.Mailbox Command
 enteredCommands = Signal.mailbox Still
@@ -149,7 +174,7 @@ commandsTextarea address =
 
 model = Signal.foldp
   update
-  model' 
+  model'
   enteredCommands.signal
 
 

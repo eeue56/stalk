@@ -11,13 +11,16 @@ type Command = Clear
   | Enter
   | UpdateText String
   | SetPcolor Argument 
+  | LogPatch Argument
   | Still
   | Failed
-  
+
 type alias CommandLibrary = Dict.Dict String (Argument -> Command)
 
 type alias Patch = {
-  pcolor: Color
+  pcolor: Color,
+  pxcor : Int,
+  pycor : Int
 }
 
 type alias CommandPanel = (String, Command)
