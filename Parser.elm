@@ -38,8 +38,9 @@ parse someText model =
       let
         tail = String.dropLeft 1 someText
         args = List.head model.stack
+        joiner = if String.contains "$" someText then ", " else " $ "
       in
         case args of 
-          Just v -> (findCommand (String.join "" [tail, " $ ", v] ) model.commands, True)
+          Just v -> (findCommand (String.join "" [tail, joiner, v] ) model.commands, True)
           Nothing -> log "Nothing at head!" (Failed, False)
         
