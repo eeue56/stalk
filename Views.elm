@@ -23,7 +23,7 @@ onEnter address value =
       (Json.customDecoder keyCode is13)
       (\_ -> Signal.message address value)
 
-commandsTextarea : Signal.Address Command -> Html
+commandsTextarea : Signal.Address Action -> Html
 commandsTextarea address = 
   div [] 
     [
@@ -32,7 +32,7 @@ commandsTextarea address =
           on "input" targetValue (Signal.message address << UpdateText)
           ] [],
       button [ onClick address Enter ] [ text "Run program" ],
-      button [ onClick address Clear ] [ text "Reset" ]
+      button [ onClick address Reset ] [ text "Reset" ]
     ]
 view address model =
   div [] [

@@ -6,10 +6,12 @@ import Dict
 
 type alias Argument = List String
 
-
-type Command = Clear 
+type Action = Reset
   | Enter
   | UpdateText String
+  | Noop
+
+type Command = Clear 
   | SetPcolor Argument
   | SetPcolorOf Argument 
   | LogPatch Argument

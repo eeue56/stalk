@@ -21,26 +21,27 @@ commands = Dict.fromList
    ("log-patch", LogPatch)
   ]
 
-
-
-update : Command -> Model -> Model
-update command model =
+runCommand : Command -> Model -> Model
+runCommand command model =
   case command of
-    Clear -> clearPatches model
-    UpdateText x -> { model | enteredText <- x } 
     SetPcolor color -> setPcolor color model
     SetPcolorOf args -> setPcolorOf args model
     LogPatch coors -> logPatch coors model
+    Clear -> clearPatches model
+    Still -> model
+    Failed -> log "Failed" model
+
+update : Action -> Model -> Model
+update action model = 
+  case action of 
+    UpdateText x -> { model | enteredText <- x } 
     Enter -> 
       let
         commands = List.map (\x -> findCommand x model.commands) <| String.lines model.enteredText 
       in
-        List.foldl (update) model commands
-    Still -> model
-    Failed -> log "Failed" model
-
-
-
+        List.foldl (runCommand) model commands
+    Reset -> runCommand Clear model
+    Noop -> model
 
 model' : Model
 model' = {
@@ -51,8 +52,8 @@ model' = {
   height = 750,
   patchSize =  750 / 25 }
 
-enteredCommands : Signal.Mailbox Command
-enteredCommands = Signal.mailbox Still
+enteredCommands : Signal.Mailbox Action
+enteredCommands = Signal.mailbox Noop
 
 model = Signal.foldp
   update
