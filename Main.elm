@@ -47,9 +47,9 @@ update action model =
     UpdateText x -> { model | enteredText <- x } 
     Enter -> 
       let
-        commands = log "commands" <| List.map (\x -> parse x model) <| String.lines model.enteredText 
+        commands = log "commands"  <| String.lines model.enteredText 
       in
-        List.foldl (runCommand) model commands
+        List.foldl (\command model' -> runCommand (parse command model') model') model commands
     Reset -> runCommand (Clear, False) model
     Noop -> model
 
