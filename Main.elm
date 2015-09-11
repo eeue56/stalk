@@ -19,7 +19,7 @@ defaultPatch = { pcolor = black }
 redPatch = { pcolor = red }
 colorPatch color = { pcolor = color } 
 
-commands : Dict.Dict String (Argument -> Command)
+commands : CommandLibrary
 commands = Dict.fromList
   [("clear", always Clear),
    ("still", always Still),
@@ -34,7 +34,7 @@ clearPatches model =
   in
     { model | patches <- Matrix.repeat width height defaultPatch }
 
-findCommand : String -> Dict.Dict String (Argument -> Command) -> Command
+findCommand : String -> CommandLibrary -> Command
 findCommand text dict =
   let
     trimText = String.trim text
@@ -98,9 +98,9 @@ update command model =
       setPcolor color model
     Enter -> 
       let
-        command = findCommand model.enteredText model.commands
+        commands = List.map (\x -> findCommand x model.commands) <| String.lines model.enteredText 
       in
-        update command model
+        List.foldl (update) model commands
     Still -> model
     Failed ->
       let
