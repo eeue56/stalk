@@ -1,19 +1,12 @@
 module Main where
 
-import Matrix exposing (Matrix)
-import Color exposing (Color, black, red, green, blue, rgb)
-import Html exposing (Html, Attribute, div, textarea, button, fromElement, text)
-import Html.Attributes exposing (placeholder, value)
-
-import Html.Events exposing (keyCode, on, targetValue, onClick)
-import Json.Decode as Json
 import Dict
 import String
 import Debug exposing (log)
 
 import Model exposing (..)
-import Drawing exposing (..)
 import Patches exposing (..)
+import Views exposing (..)
 
 
 
@@ -26,7 +19,6 @@ commands = Dict.fromList
    ("failed", always Failed),
    ("log-patch", LogPatch)
   ]
-
 
 
 findCommand : String -> CommandLibrary -> Command
@@ -72,8 +64,7 @@ update command model =
     Failed -> log "Failed" model
 
 
-drawWorld model =
-  draw model
+
 
 model' : Model
 model' = {
@@ -87,39 +78,11 @@ model' = {
 enteredCommands : Signal.Mailbox Command
 enteredCommands = Signal.mailbox Still
 
-
-is13 : Int -> Result String ()
-is13 code =
-  if code == 13 then Ok () else Err ""
-
-onEnter : Signal.Address a -> a -> Attribute
-onEnter address value =
-    on "keydown"
-      (Json.customDecoder keyCode is13)
-      (\_ -> Signal.message address value)
-
-commandsTextarea : Signal.Address Command -> Html
-commandsTextarea address = 
-  div [] 
-    [
-      textarea 
-        [ placeholder "Enter a command",
-          on "input" targetValue (Signal.message address << UpdateText)
-          ] [],
-      button [ onClick address Enter ] [ text "Run program" ],
-      button [ onClick address Clear ] [ text "Reset" ]
-    ]
-
 model = Signal.foldp
   update
   model'
   enteredCommands.signal
 
 
-view address model =
-  div [] [
-    commandsTextarea address,
-    fromElement <| drawWorld model
-  ]
 
 main = Signal.map (view enteredCommands.address) model
