@@ -2,7 +2,7 @@ module Main where
 
 import Matrix exposing (Matrix)
 import Color exposing (Color, black, red, green, blue, rgb)
-import Html exposing (Html, Attribute, div, textarea, button, fromElement)
+import Html exposing (Html, Attribute, div, textarea, button, fromElement, text)
 import Html.Attributes exposing (placeholder, value)
 
 import Html.Events exposing (keyCode, on, targetValue, onClick)
@@ -143,7 +143,8 @@ commandsTextarea address =
         [ placeholder "Enter a command",
           on "input" targetValue (Signal.message address << UpdateText)
           ] [],
-      button [ onClick address Enter ] []
+      button [ onClick address Enter ] [ text "Run program" ],
+      button [ onClick address Clear ] [ text "Reset" ]
     ]
 
 model = Signal.foldp
