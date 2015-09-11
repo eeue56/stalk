@@ -32,6 +32,7 @@ commands = Dict.fromList
   [("clear", always Clear),
    ("still", always Still),
    ("set-pcolor", SetPcolor),
+   ("set-pcolor-of", SetPcolorOf),
    ("failed", always Failed),
    ("log-patch", LogPatch)
   ]
@@ -105,6 +106,17 @@ setPcolor color model =
     in
       { model | patches <- Matrix.map (\x -> { x | pcolor <- newColor }) model.patches }
 
+setPcolorOf : Argument -> Model -> Model
+setPcolorOf args model =
+  let
+    i = alwaysOk <| case List.head args of Just x -> x
+    j = alwaysOk <| (\y -> case List.head y of Just v -> v) <| case List.tail args of Just x -> x
+    rgb = List.drop 2 args
+    newColor = rgbFromList rgb
+    update = (\p -> { p | pcolor <- newColor })
+  in
+    { model | patches <- Matrix.update i j update model.patches }
+
 logPatch : Argument -> Model -> Model
 logPatch args model =
   let 
@@ -124,6 +136,7 @@ update command model =
     Clear -> clearPatches model
     UpdateText x -> { model | enteredText <- x } 
     SetPcolor color -> setPcolor color model
+    SetPcolorOf args -> setPcolorOf args model
     LogPatch coors -> logPatch coors model
     Enter -> 
       let

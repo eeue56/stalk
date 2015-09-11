@@ -10,7 +10,8 @@ type alias Argument = List String
 type Command = Clear 
   | Enter
   | UpdateText String
-  | SetPcolor Argument 
+  | SetPcolor Argument
+  | SetPcolorOf Argument 
   | LogPatch Argument
   | Still
   | Failed
