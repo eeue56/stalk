@@ -14,6 +14,7 @@ type Action = Reset
 type Command = Clear 
   | SetPcolor Argument
   | SetPcolorOf Argument 
+  | PcolorOf Argument
   | LogPatch Argument
   | Still
   | Failed
@@ -36,5 +37,7 @@ type alias Model = {
   
   width : Int,
   height : Int,
+
+  stack : List String,
 
   patchSize : Float }

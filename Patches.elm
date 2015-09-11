@@ -9,6 +9,22 @@ import Model exposing (..)
 import Utils exposing (..)
 
 
+pcolorOf : Argument -> Model -> Model
+pcolorOf args model = 
+  let
+    i = alwaysOkInt <| case List.head args of Just x -> x
+    j = alwaysOkInt <| (\y -> case List.head y of Just v -> v) <| case List.tail args of Just x -> x
+    colorAsString obj =
+      String.join ","
+       <| List.map toString [obj.red, obj.green, obj.blue]
+
+    color = 
+      case Matrix.get i j model.patches of
+        Just v -> colorAsString <| Color.toRgb v.pcolor
+        Nothing -> "error"
+  in
+    { model | stack <- color :: model.stack }
+
 setPcolor : Argument -> Model -> Model
 setPcolor color model =
   if List.length color == 1 then

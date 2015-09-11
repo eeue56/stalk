@@ -17,19 +17,29 @@ commands = Dict.fromList
    ("still", always Still),
    ("set-pcolor", SetPcolor),
    ("set-pcolor-of", SetPcolorOf),
+   ("pcolor-of", PcolorOf),
    ("failed", always Failed),
    ("log-patch", LogPatch)
   ]
 
-runCommand : Command -> Model -> Model
-runCommand command model =
-  case command of
-    SetPcolor color -> setPcolor color model
-    SetPcolorOf args -> setPcolorOf args model
-    LogPatch coors -> logPatch coors model
-    Clear -> clearPatches model
-    Still -> model
-    Failed -> log "Failed" model
+runCommand : (Command, Bool) -> Model -> Model
+runCommand (command, usesStack) model' =
+  let
+    model = 
+      if usesStack then
+        { model' | stack <- List.drop 1 model'.stack }
+      else 
+        model'
+  in
+    case command of
+      SetPcolor color -> setPcolor color model
+      SetPcolorOf args -> setPcolorOf args model
+      PcolorOf args -> pcolorOf args model
+      LogPatch coors -> logPatch coors model
+      Clear -> clearPatches model
+      Still -> model
+      Failed -> model
+      _ -> log "Not found" model
 
 update : Action -> Model -> Model
 update action model = 
@@ -37,10 +47,10 @@ update action model =
     UpdateText x -> { model | enteredText <- x } 
     Enter -> 
       let
-        commands = List.map (\x -> findCommand x model.commands) <| String.lines model.enteredText 
+        commands = log "commands" <| List.map (\x -> parse x model) <| String.lines model.enteredText 
       in
         List.foldl (runCommand) model commands
-    Reset -> runCommand Clear model
+    Reset -> runCommand (Clear, False) model
     Noop -> model
 
 model' : Model
@@ -50,6 +60,7 @@ model' = {
   commands = commands,
   width = 750,
   height = 750,
+  stack = [],
   patchSize =  750 / 25 }
 
 enteredCommands : Signal.Mailbox Action

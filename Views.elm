@@ -37,5 +37,6 @@ commandsTextarea address =
 view address model =
   div [] [
     commandsTextarea address,
-    fromElement <| drawWorld model
+    fromElement <| drawWorld model,
+    text <| toString model.stack
   ]
