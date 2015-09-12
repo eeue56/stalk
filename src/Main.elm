@@ -24,6 +24,7 @@ commands = Dict.fromList
    ("empty-stack", EmptyStack),
    ("push", PushToStack),
    ("pop", PopOffStack),
+   ("repeat", RepeatTopOfStack),
 
    ("set-pcolor", SetPcolor),
    ("set-pcolor-of", SetPcolorOf),
@@ -65,6 +66,7 @@ runCommand (command, stackUses) model' =
       EmptyStack args -> emptyStack args model
       PushToStack args -> pushToStack args model
       PopOffStack args -> popOffStack args model
+      RepeatTopOfStack args -> repeatTopOfStack args model
 
       Add args -> add args model
       Subtract args -> subtract args model

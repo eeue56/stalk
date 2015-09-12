@@ -4,9 +4,11 @@ import String
 import Debug exposing (log)
 import Color exposing (Color, black, red, green, blue, rgb)
 
-alwaysOkInt v = case String.toInt v of 
-  Ok x -> x
-  Err _ -> log "Incorrect convert" 0
+alwaysOkInt : String -> Int
+alwaysOkInt v = 
+  case String.toInt v of 
+    Ok x -> x
+    Err _ -> log "Incorrect convert" 0
 
 -- TODO: add to elm-simple-data
 rgbFromList vals = 

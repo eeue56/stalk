@@ -23,6 +23,7 @@ type Command = Clear
   | EmptyStack Argument
   | PopOffStack Argument
   | PushToStack Argument
+  | RepeatTopOfStack Argument
 
   | Add Argument
   | Subtract Argument
