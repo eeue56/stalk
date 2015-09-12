@@ -10,7 +10,7 @@ import Utils exposing (..)
 import Parser exposing (compileError)
 
 
-incorrectCoords : String -> Model -> Model
+incorrectCoords : Argument -> Model -> Model
 incorrectCoords args model =
   compileError ["incorect coords: " ++ String.join ", " args] model
 
