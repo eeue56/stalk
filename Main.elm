@@ -18,6 +18,9 @@ commands = Dict.fromList
    ("set-pcolor", SetPcolor),
    ("set-pcolor-of", SetPcolorOf),
    ("pcolor-of", PcolorOf),
+   ("pxcor-of", PxcorOf),
+   ("pycor-of", PycorOf),
+   ("pxycor-of", PxycorOf),
    ("failed", always Failed),
    ("log-patch", LogPatch)
   ]
@@ -31,6 +34,9 @@ runCommand (command, stackUses) model' =
       SetPcolor color -> setPcolor color model
       SetPcolorOf args -> setPcolorOf args model
       PcolorOf args -> pcolorOf args model
+      PxcorOf args -> pxcorOf args model
+      PycorOf args -> pycorOf args model
+      PxycorOf args -> pxycorOf args model
       LogPatch coors -> logPatch coors model
       Clear -> clearPatches model
       Still -> model

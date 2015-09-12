@@ -15,6 +15,9 @@ type Command = Clear
   | SetPcolor Argument
   | SetPcolorOf Argument 
   | PcolorOf Argument
+  | PxcorOf Argument
+  | PycorOf Argument
+  | PxycorOf Argument
   | LogPatch Argument
   | Still
   | Failed

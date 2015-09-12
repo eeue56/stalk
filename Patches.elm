@@ -25,6 +25,39 @@ pcolorOf args model =
   in
     { model | stack <- color :: model.stack }
 
+pxcorOf : Argument -> Model -> Model
+pxcorOf args model =
+  let
+    i = alwaysOkInt <| case List.head args of Just x -> x
+    j = alwaysOkInt <| (\y -> case List.head y of Just v -> v) <| case List.tail args of Just x -> x
+    
+  in
+    case Matrix.get i j model.patches of
+      Just v -> { model | stack <- (toString v.pxcor) :: model.stack }
+      Nothing -> model
+
+pycorOf : Argument -> Model -> Model
+pycorOf args model =
+  let
+    i = alwaysOkInt <| case List.head args of Just x -> x
+    j = alwaysOkInt <| (\y -> case List.head y of Just v -> v) <| case List.tail args of Just x -> x
+    
+  in
+    case Matrix.get i j model.patches of
+      Just v -> { model | stack <- (toString v.pycor) :: model.stack }
+      Nothing -> model
+
+pxycorOf : Argument -> Model -> Model
+pxycorOf args model =
+  let
+    i = alwaysOkInt <| case List.head args of Just x -> x
+    j = alwaysOkInt <| (\y -> case List.head y of Just v -> v) <| case List.tail args of Just x -> x
+    
+  in
+    case Matrix.get i j model.patches of
+      Just v -> { model | stack <- (String.join "," [toString v.pxcor, toString v.pycor]) :: model.stack }
+      Nothing -> model
+
 setPcolor : Argument -> Model -> Model
 setPcolor color model =
   if List.length color == 1 then
