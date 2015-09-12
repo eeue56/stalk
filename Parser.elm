@@ -36,8 +36,14 @@ parse someText model =
   if not <| String.startsWith "#" someText then (findCommand someText model.commands, 0)
     else
       let
-        amount = List.length <| (String.indexes "#" someText) 
-        tail = String.dropLeft amount someText
+        isHashAll = String.startsWith "#@" someText
+        amount = 
+          if isHashAll then List.length model.stack
+          else
+            List.length <| (String.indexes "#" someText) 
+        tail = 
+          if isHashAll then String.dropLeft 2  someText 
+          else String.dropLeft amount someText
         args = 
             if amount - (List.length model.stack) < 0 then
               Nothing
