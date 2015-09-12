@@ -30,6 +30,8 @@ commands = Dict.fromList
 
    ("failed", always Failed),
 
+   ("error", CompileError),
+
    ("log-patch", LogPatch)
   ]
 
@@ -53,7 +55,8 @@ runCommand (command, stackUses) model' =
       PushToStack args -> pushToStack args model
       PopOffStack args -> popOffStack args model
 
-      Clear -> clearPatches model
+      CompileError messages -> compileError messages model
+      Clear -> clearPatches model |> emptyStack []
       Still -> model
       Failed -> model
       _ -> log "Not found" model
@@ -64,15 +67,17 @@ update action model =
     UpdateText x -> { model | enteredText <- x } 
     Enter -> 
       let
-        commands = log "commands"  <| String.lines model.enteredText 
+        model' = { model | errorMessage <- "" }
+        commands = log "commands"  <| String.lines model'.enteredText 
       in
-        List.foldl (\command model' -> runCommand (parse command model') model') model commands
+        List.foldl (\command model'' -> runCommand (parse command model'') model'') model' commands
     Reset -> runCommand (Clear, 0) model
     Noop -> model
 
 model' : Model
 model' = {
   enteredText = "",
+  errorMessage = "",
   patches = defaultPatches 25 25,
   commands = commands,
   width = 750,

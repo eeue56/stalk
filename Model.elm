@@ -23,6 +23,8 @@ type Command = Clear
   | EmptyStack Argument
   | PopOffStack Argument
   | PushToStack Argument
+
+  | CompileError Argument
   | Still
   | Failed
 
@@ -39,6 +41,8 @@ type alias CommandPanel = (String, Command)
 type alias Model = {
   enteredText : String,
 
+  errorMessage : String,
+  
   patches : Matrix Patch,
   commands : CommandLibrary,
   

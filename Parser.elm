@@ -6,11 +6,14 @@ import Debug exposing (log)
 
 import Model exposing (..)
 
+compileError : Argument -> Model -> Model
+compileError messages model =
+  { model | errorMessage <- String.join "\n" <| (model.errorMessage) :: messages }
+
 findCommand : String -> CommandLibrary -> Command
 findCommand text dict =
   let
-    --commands = List.map (String.trim) <| String.split " " text
-    trimText = String.trim text --List.take 1 commands
+    trimText = String.trim text
     hasArgs = String.contains "$" trimText
     args = if not hasArgs then [] else
       case List.tail <| String.split "$" trimText of 
@@ -23,13 +26,13 @@ findCommand text dict =
       then 
         case Dict.get trimText dict of
           Just v -> v []
-          Nothing -> Failed
+          Nothing -> CompileError ["command not found: " ++ trimText]
       else
         case List.head <| String.split "$" trimText of
           Just v -> case Dict.get (String.trim v) dict of
             Just command -> command <| List.map (String.trim) args 
-            Nothing -> Failed
-          Nothing -> Failed
+            Nothing -> CompileError ["command not found: " ++ v]
+          Nothing -> CompileError ["something up with this line: " ++ trimText]
 
 parse : String -> Model -> (Command, Int)
 parse someText model =
@@ -42,10 +45,10 @@ parse someText model =
           else
             List.length <| (String.indexes "#" someText) 
         tail = 
-          if isHashAll then String.dropLeft 2  someText 
+          if isHashAll then String.dropLeft 2 someText 
           else String.dropLeft amount someText
         args = 
-            if amount - (List.length model.stack) < 0 then
+            if (List.length model.stack) - amount < 0 then
               Nothing
             else
               Just <| log "erm" <| String.join "," <| List.take amount model.stack
@@ -53,5 +56,5 @@ parse someText model =
       in
         case args of 
           Just v -> (findCommand (log "commands" <| String.join "" [tail, joiner, v] ) model.commands, amount)
-          Nothing -> log "Nothing at head!" (Failed, 0)
+          Nothing -> log "Nothing at head!" (CompileError ["Not enough items on stack"], 0)
         
