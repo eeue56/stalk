@@ -33,16 +33,13 @@ pcolorOf : Argument -> Model -> Model
 pcolorOf args model = 
   let
     (i, j) = getCoords args model
-    colorAsString obj =
-      String.join ","
-       <| List.map toString [obj.red, obj.green, obj.blue]
   in
       case Matrix.get i j model.patches of
         Just v -> 
           let 
-            color = colorAsString <| Color.toRgb v.pcolor
+            color = Color.toRgb v.pcolor
           in 
-            { model | stack <- color :: model.stack }     
+            { model | stack <- [toString color.red, toString color.green, toString color.blue] ++ model.stack }     
         Nothing -> incorrectCoords args model
 
 pxcorOf : Argument -> Model -> Model
@@ -69,7 +66,7 @@ pxycorOf args model =
     (i, j) = getCoords args model
   in
     case Matrix.get i j model.patches of
-      Just v -> { model | stack <- (String.join "," [toString v.pxcor, toString v.pycor]) :: model.stack }
+      Just v -> { model | stack <- [toString v.pxcor, toString v.pycor] ++ model.stack }
       Nothing -> incorrectCoords args model
 
 setPcolor : Argument -> Model -> Model
