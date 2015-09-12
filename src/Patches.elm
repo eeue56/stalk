@@ -12,13 +12,27 @@ import Parser exposing (compileError)
 
 incorrectCoords : Argument -> Model -> Model
 incorrectCoords args model =
-  compileError ["incorect coords: " ++ String.join ", " args] model
+  compileError ["incorrect coords: " ++ String.join ", " args] model
+
+getCoords : Argument -> Model -> (Int, Int)
+getCoords args model = 
+  let
+    (width, height) = model.patches.size
+    i = 
+      case List.head args of 
+        Just x -> alwaysOkInt <| x
+        Nothing -> width + 1
+    j = 
+      case List.head (List.drop 1 args) of 
+        Just v -> alwaysOkInt <| v
+        Nothing -> height + 1
+  in 
+    (i, j)
 
 pcolorOf : Argument -> Model -> Model
 pcolorOf args model = 
   let
-    i = alwaysOkInt <| case List.head args of Just x -> x
-    j = alwaysOkInt <| (\y -> case List.head y of Just v -> v) <| case List.tail args of Just x -> x
+    (i, j) = getCoords args model
     colorAsString obj =
       String.join ","
        <| List.map toString [obj.red, obj.green, obj.blue]
@@ -34,9 +48,7 @@ pcolorOf args model =
 pxcorOf : Argument -> Model -> Model
 pxcorOf args model =
   let
-    i = alwaysOkInt <| case List.head args of Just x -> x
-    j = alwaysOkInt <| (\y -> case List.head y of Just v -> v) <| case List.tail args of Just x -> x
-    
+    (i, j) = getCoords args model
   in
     case Matrix.get i j model.patches of
       Just v -> { model | stack <- (toString v.pxcor) :: model.stack }
@@ -45,9 +57,7 @@ pxcorOf args model =
 pycorOf : Argument -> Model -> Model
 pycorOf args model =
   let
-    i = alwaysOkInt <| case List.head args of Just x -> x
-    j = alwaysOkInt <| (\y -> case List.head y of Just v -> v) <| case List.tail args of Just x -> x
-    
+    (i, j) = getCoords args model
   in
     case Matrix.get i j model.patches of
       Just v -> { model | stack <- (toString v.pycor) :: model.stack }
@@ -56,9 +66,7 @@ pycorOf args model =
 pxycorOf : Argument -> Model -> Model
 pxycorOf args model =
   let
-    i = alwaysOkInt <| case List.head args of Just x -> x
-    j = alwaysOkInt <| (\y -> case List.head y of Just v -> v) <| case List.tail args of Just x -> x
-    
+    (i, j) = getCoords args model
   in
     case Matrix.get i j model.patches of
       Just v -> { model | stack <- (String.join "," [toString v.pxcor, toString v.pycor]) :: model.stack }
@@ -87,8 +95,7 @@ setPcolor color model =
 setPcolorOf : Argument -> Model -> Model
 setPcolorOf args model =
   let
-    i = alwaysOkInt <| case List.head args of Just x -> x
-    j = alwaysOkInt <| (\y -> case List.head y of Just v -> v) <| case List.tail args of Just x -> x
+    (i, j) = getCoords args model
     rgb = List.drop 2 args
     newColor = rgbFromList rgb
     update = (\p -> { p | pcolor <- newColor })
@@ -98,8 +105,7 @@ setPcolorOf args model =
 logPatch : Argument -> Model -> Model
 logPatch args model =
   let 
-    i = alwaysOkInt <| case List.head args of Just x -> x
-    j = alwaysOkInt <| case List.head <| List.reverse args of Just x -> x
+    (i, j) = getCoords args model
     patch = case Matrix.get i j model.patches of 
       Just v -> log "Patch is: " v
       Nothing -> log "erm" (case Matrix.get 0 0 model.patches of Just v -> v)
