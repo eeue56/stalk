@@ -131,7 +131,7 @@ colorPatch color x y = { pcolor = color, pxcor = x, pycor = y }
 
 defaultPatches width height = 
   let
-    board = List.map (\x -> List.map (\y -> defaultPatch x y) [0..width]) [0..height]
+    board = List.map (\y -> List.map (\x -> defaultPatch x y) [0..width]) [0..height]
   in
     case Matrix.fromList board of
       Just v -> v
