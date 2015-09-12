@@ -37,7 +37,14 @@ parse someText model =
     else
       let
         tail = String.dropLeft 1 someText
-        args = List.head model.stack
+        args = 
+          let
+            amount = List.length <| (String.indexes "#" someText) 
+          in
+            if amount - (List.length model.stack) < 0 then
+              Nothing
+            else
+              Just <| String.join "," <| List.take amount model.stack
         joiner = if String.contains "$" someText then ", " else " $ "
       in
         case args of 
