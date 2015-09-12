@@ -10,6 +10,10 @@ import Utils exposing (..)
 import Parser exposing (compileError)
 
 
+incorrectCoords : String -> Model -> Model
+incorrectCoords args model =
+  compileError ["incorect coords: " ++ String.join ", " args] model
+
 pcolorOf : Argument -> Model -> Model
 pcolorOf args model = 
   let
@@ -25,7 +29,7 @@ pcolorOf args model =
             color = colorAsString <| Color.toRgb v.pcolor
           in 
             { model | stack <- color :: model.stack }     
-        Nothing -> compileError ["incorect coords: " ++ String.join ", " args] model
+        Nothing -> incorrectCoords args model
 
 pxcorOf : Argument -> Model -> Model
 pxcorOf args model =
@@ -36,7 +40,7 @@ pxcorOf args model =
   in
     case Matrix.get i j model.patches of
       Just v -> { model | stack <- (toString v.pxcor) :: model.stack }
-      Nothing -> compileError ["incorect coords: " ++ String.join ", " args] model
+      Nothing -> incorrectCoords args model
 
 pycorOf : Argument -> Model -> Model
 pycorOf args model =
@@ -47,7 +51,7 @@ pycorOf args model =
   in
     case Matrix.get i j model.patches of
       Just v -> { model | stack <- (toString v.pycor) :: model.stack }
-      Nothing -> compileError ["incorect coords: " ++ String.join ", " args] model
+      Nothing -> incorrectCoords args model
 
 pxycorOf : Argument -> Model -> Model
 pxycorOf args model =
@@ -58,7 +62,7 @@ pxycorOf args model =
   in
     case Matrix.get i j model.patches of
       Just v -> { model | stack <- (String.join "," [toString v.pxcor, toString v.pycor]) :: model.stack }
-      Nothing -> compileError ["incorect coords: " ++ String.join ", " args] model
+      Nothing -> incorrectCoords args model
 
 setPcolor : Argument -> Model -> Model
 setPcolor color model =

@@ -33,7 +33,7 @@ background width height =
   rect (toFloat width) (toFloat height)
     |> filled black
 
---draw : Model -> Element
+
 draw model = 
   collage model.width model.height
     <| (background model.width model.height) :: (drawArray model)
