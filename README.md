@@ -7,7 +7,7 @@ While working on a proper parser, at the moment the language is stack-based with
 
 ## Syntax
 
-`\#` is used to push things off the stack as arguments to the command following
+`#` is used to push things off the stack as arguments to the command following
 
 E.g 
 
