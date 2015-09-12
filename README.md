@@ -34,3 +34,26 @@ If you want to pop everything off the stack, use `#@`
 
 `$` is used to seperate commands from their arguments
 
+# Example program
+
+```
+
+push $ 255, 255, 0
+push $ 5, 5
+>@ set-pcolor-of
+; get rid of the coords
+## pop
+>@ set-pcolor-of $ 2, 2
+; empty stack
+#@ pop
+
+set-pcolor-of $ 6, 7, 120, 3, 45
+pcolor-of $ 6, 7
+; add everything on stack together and pop it back on stack
+#@ add
+; use the top item and push it again
+> push
+> push
+#@ set-pcolor-of $ 7, 7
+
+```
