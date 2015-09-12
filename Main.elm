@@ -40,11 +40,15 @@ runCommand (command, stackUses) model' =
     case command of
       SetPcolor color -> setPcolor color model
       SetPcolorOf args -> setPcolorOf args model
+
       PcolorOf args -> pcolorOf args model
       PxcorOf args -> pxcorOf args model
       PycorOf args -> pycorOf args model
       PxycorOf args -> pxycorOf args model
+
       LogPatch coors -> logPatch coors model
+
+      EmptyStack args -> emptyStack args model
       Clear -> clearPatches model
       Still -> model
       Failed -> model
