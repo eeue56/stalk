@@ -7,6 +7,7 @@ import Debug exposing (log)
 import Model exposing (..)
 import Patches exposing (..)
 import Stack exposing (..)
+import Maths exposing (..)
 
 import Views exposing (..)
 import Parser exposing (..)
@@ -17,22 +18,27 @@ commands : CommandLibrary
 commands = Dict.fromList
   [("clear", always Clear),
    ("still", always Still),
+   ("failed", always Failed),
+   ("error", CompileError),
+
    ("empty-stack", EmptyStack),
    ("push", PushToStack),
    ("pop", PopOffStack),
 
    ("set-pcolor", SetPcolor),
    ("set-pcolor-of", SetPcolorOf),
+
    ("pcolor-of", PcolorOf),
    ("pxcor-of", PxcorOf),
    ("pycor-of", PycorOf),
    ("pxycor-of", PxycorOf),
 
-   ("failed", always Failed),
+   ("log-patch", LogPatch),
 
-   ("error", CompileError),
-
-   ("log-patch", LogPatch)
+   ("add", Add),
+   ("subtract", Subtract),
+   ("+", Add),
+   ("-", Subtract)
   ]
 
 runCommand : (Command, Int) -> Model -> Model
@@ -54,6 +60,9 @@ runCommand (command, stackUses) model' =
       EmptyStack args -> emptyStack args model
       PushToStack args -> pushToStack args model
       PopOffStack args -> popOffStack args model
+
+      Add args -> add args model
+      Subtract args -> subtract args model
 
       CompileError messages -> compileError messages model
       Clear -> clearPatches model |> emptyStack []

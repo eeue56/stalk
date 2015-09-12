@@ -24,6 +24,9 @@ type Command = Clear
   | PopOffStack Argument
   | PushToStack Argument
 
+  | Add Argument
+  | Subtract Argument
+
   | CompileError Argument
   | Still
   | Failed
@@ -42,7 +45,7 @@ type alias Model = {
   enteredText : String,
 
   errorMessage : String,
-  
+
   patches : Matrix Patch,
   commands : CommandLibrary,
   
