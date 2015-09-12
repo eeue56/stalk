@@ -6,6 +6,8 @@ import Debug exposing (log)
 
 import Model exposing (..)
 import Patches exposing (..)
+import Stack exposing (..)
+
 import Views exposing (..)
 import Parser exposing (..)
 
@@ -15,13 +17,18 @@ commands : CommandLibrary
 commands = Dict.fromList
   [("clear", always Clear),
    ("still", always Still),
+   ("empty-stack", EmptyStack),
+
+
    ("set-pcolor", SetPcolor),
    ("set-pcolor-of", SetPcolorOf),
    ("pcolor-of", PcolorOf),
    ("pxcor-of", PxcorOf),
    ("pycor-of", PycorOf),
    ("pxycor-of", PxycorOf),
+
    ("failed", always Failed),
+
    ("log-patch", LogPatch)
   ]
 
