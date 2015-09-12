@@ -21,6 +21,7 @@ type Command = Clear
   | LogPatch Argument
 
   | EmptyStack Argument
+  | PopOffStack Argument
   | PushToStack Argument
   | Still
   | Failed
