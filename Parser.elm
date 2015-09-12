@@ -10,6 +10,15 @@ compileError : Argument -> Model -> Model
 compileError messages model =
   { model | errorMessage <- String.join "\n" <| (model.errorMessage) :: messages }
 
+commandNotFound : String -> CommandLibrary -> Command
+commandNotFound command dict =
+  let
+    helpWarning = 
+      if (List.length <| String.split " " command) > 2 then "\nMaybe you forgot a $?"
+      else ""
+  in
+    CompileError ["command not found: " ++ command ++ helpWarning]
+
 findCommand : String -> CommandLibrary -> Command
 findCommand text dict =
   let
@@ -26,12 +35,12 @@ findCommand text dict =
       then 
         case Dict.get trimText dict of
           Just v -> v []
-          Nothing -> CompileError ["command not found: " ++ trimText]
+          Nothing -> commandNotFound trimText dict
       else
         case List.head <| String.split "$" trimText of
           Just v -> case Dict.get (String.trim v) dict of
             Just command -> command <| List.map (String.trim) args 
-            Nothing -> CompileError ["command not found: " ++ v]
+            Nothing -> commandNotFound v dict
           Nothing -> CompileError ["something up with this line: " ++ trimText]
 
 parse : String -> Model -> (Command, Int)
