@@ -1,5 +1,16 @@
 # elm-netlogo
 
+# Background
+
+If you haven't heard of [Netlogo](https://ccl.northwestern.edu/netlogo/) before, go check it out. It's a Logo derivative aimed at allowing you to create simulations through an agent-based model.
+
+While studying at university, it was probably the best thing they introduced to me and I had a lot of fun abusing it as much as I could, some of which I've documented with these projects - [ask-the-net](https://github.com/eeue56/ask-the-net), [morse-code-golf](https://github.com/eeue56/code-golf/tree/master/morsecode), [zombie-sims](https://github.com/eeue56/NetlogoSims/blob/master/Zombies/ZombiesSim.nlogo).
+
+As an actual language, it doesn't really work very well. It has some fairly limited power, though if you abuse the turtles you can do some powerful things (like in my morse-code example, where I use turtles for implementing dicts).
+
+Whitespace is a fairly nice esoteric language, for which I have an implementation [here](https://github.com/eeue56/spacepie). There were parts of whitespace that I really liked the simplicity of implementing - especially the stack.
+
+elm-netlogo aims to be a simple language, bridging whitespace and Netlogo, just like every programmer has ever wished for.
 
 ###Rough clone of NetLogo written in Elm.
 
