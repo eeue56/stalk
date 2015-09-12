@@ -31,16 +31,14 @@ findCommand text dict =
             Nothing -> Failed
           Nothing -> Failed
 
-parse : String -> Model -> (Command, Bool)
+parse : String -> Model -> (Command, Int)
 parse someText model =
-  if not <| String.startsWith "#" someText then (findCommand someText model.commands, False)
+  if not <| String.startsWith "#" someText then (findCommand someText model.commands, 0)
     else
       let
         tail = String.dropLeft 1 someText
+        amount = List.length <| (String.indexes "#" someText) 
         args = 
-          let
-            amount = List.length <| (String.indexes "#" someText) 
-          in
             if amount - (List.length model.stack) < 0 then
               Nothing
             else
@@ -48,6 +46,6 @@ parse someText model =
         joiner = if String.contains "$" someText then ", " else " $ "
       in
         case args of 
-          Just v -> (findCommand (String.join "" [tail, joiner, v] ) model.commands, True)
-          Nothing -> log "Nothing at head!" (Failed, False)
+          Just v -> (findCommand (String.join "" [tail, joiner, v] ) model.commands, amount)
+          Nothing -> log "Nothing at head!" (Failed, 0)
         

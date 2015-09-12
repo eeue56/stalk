@@ -22,14 +22,10 @@ commands = Dict.fromList
    ("log-patch", LogPatch)
   ]
 
-runCommand : (Command, Bool) -> Model -> Model
-runCommand (command, usesStack) model' =
+runCommand : (Command, Int) -> Model -> Model
+runCommand (command, stackUses) model' =
   let
-    model = 
-      if usesStack then
-        { model' | stack <- List.drop 1 model'.stack }
-      else 
-        model'
+    model = { model' | stack <- List.drop stackUses model'.stack }
   in
     case command of
       SetPcolor color -> setPcolor color model
@@ -50,7 +46,7 @@ update action model =
         commands = log "commands"  <| String.lines model.enteredText 
       in
         List.foldl (\command model' -> runCommand (parse command model') model') model commands
-    Reset -> runCommand (Clear, False) model
+    Reset -> runCommand (Clear, 0) model
     Noop -> model
 
 model' : Model
