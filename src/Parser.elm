@@ -74,7 +74,7 @@ parseStackPop line model =
     in
       case args of 
         Just v -> (findCommand (log "commands" <| String.join "" [tail, joiner, v] ) model.commands, amount)
-        Nothing -> log "Nothing at head!" (CompileError ["Not enough items on stack"], 0)
+        Nothing -> log "Nothing at head!" (CompileError ["Not enough items on stack with: " ++ line], 0)
 
 parseStackUse : String -> Model -> (Command, Int)
 parseStackUse line model =
@@ -89,7 +89,7 @@ parseStackUse line model =
     in
       case args of 
         Just v -> (findCommand (log "commands" <| String.join "" [tail, joiner, v] ) model.commands, 0)
-        Nothing -> log "Nothing at head!" (CompileError ["Not enough items on stack"], 0)
+        Nothing -> log "Nothing at head!" (CompileError ["Not enough items on stack with: " ++ line], 0)
 
 isStackOp : String -> Bool
 isStackOp line =
