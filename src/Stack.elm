@@ -32,3 +32,18 @@ repeatTopOfStack args model =
 push : String -> Model -> Model
 push item model =
   { model | stack <- item :: model.stack }
+
+swap : Model -> Model
+swap model = 
+  let
+    items = List.take 2 model.stack
+    notEnough = compileError ["not enough items on stack for swap!"] model
+  in
+    if List.length items < 2 then
+      notEnough
+    else
+      case List.head items of
+        Just x -> case List.head <| List.drop 1 items of
+          Just y -> { model | stack <- [y, x] ++ List.drop 2 model.stack }
+          Nothing -> notEnough
+        Nothing -> notEnough

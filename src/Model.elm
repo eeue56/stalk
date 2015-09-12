@@ -24,6 +24,7 @@ type Command = Clear
   | PopOffStack Argument
   | PushToStack Argument
   | RepeatTopOfStack Argument
+  | SwapTopOfStack
 
   | Add Argument
   | Subtract Argument
