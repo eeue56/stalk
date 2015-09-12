@@ -23,7 +23,12 @@ repeatTopOfStack args model =
     Just v -> 
       case String.toInt v of
         Ok x -> case List.head model.stack of
-          Just n -> { model | stack <- (List.repeat x n) ++ model.stack }
+          Just n -> List.foldl push model <| List.repeat x n
           Nothing -> compileError ["not enough items on stack!"] model
         Err m -> compileError [m ++ " invalid arguments: " ++ String.join ", " args] model
     Nothing -> compileError ["not enough arguments: " ++ String.join ", " args] model
+
+
+push : String -> Model -> Model
+push item model =
+  { model | stack <- item :: model.stack }

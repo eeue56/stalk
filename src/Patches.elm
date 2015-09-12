@@ -8,6 +8,7 @@ import Debug exposing (log)
 import Model exposing (..)
 import Utils exposing (..)
 import Parser exposing (compileError)
+import Stack
 
 
 incorrectCoords : Argument -> Model -> Model
@@ -39,7 +40,7 @@ pcolorOf args model =
           let 
             color = Color.toRgb v.pcolor
           in 
-            { model | stack <- [toString color.red, toString color.green, toString color.blue] ++ model.stack }     
+            List.foldl Stack.push model <| List.map toString <| List.reverse [color.red, color.green, color.blue]
         Nothing -> incorrectCoords args model
 
 pxcorOf : Argument -> Model -> Model
@@ -48,7 +49,7 @@ pxcorOf args model =
     (i, j) = getCoords args model
   in
     case Matrix.get i j model.patches of
-      Just v -> { model | stack <- (toString v.pxcor) :: model.stack }
+      Just v -> Stack.push (toString  v.pxcor) model
       Nothing -> incorrectCoords args model
 
 pycorOf : Argument -> Model -> Model
@@ -57,7 +58,7 @@ pycorOf args model =
     (i, j) = getCoords args model
   in
     case Matrix.get i j model.patches of
-      Just v -> { model | stack <- (toString v.pycor) :: model.stack }
+      Just v -> Stack.push (toString  v.pycor) model
       Nothing -> incorrectCoords args model
 
 pxycorOf : Argument -> Model -> Model
@@ -66,7 +67,7 @@ pxycorOf args model =
     (i, j) = getCoords args model
   in
     case Matrix.get i j model.patches of
-      Just v -> { model | stack <- [toString v.pxcor, toString v.pycor] ++ model.stack }
+      Just v -> List.foldl Stack.push model <| List.reverse <| List.map toString [v.pxcor, v.pycor]
       Nothing -> incorrectCoords args model
 
 setPcolor : Argument -> Model -> Model
