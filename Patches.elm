@@ -64,13 +64,15 @@ setPcolor : Argument -> Model -> Model
 setPcolor color model =
   if List.length color == 1 then
     let
-      myHead = case List.head color of 
-        Just v -> String.trim v
-        Nothing -> "black"
-      newColor = if myHead == "red" then red else black
       (width, height) = model.patches.size
     in
-      { model | patches <- Matrix.map (\x -> { x | pcolor <- newColor }) model.patches }
+      case List.head color of
+        Just v -> 
+          let
+            newColor = if String.trim v == "red" then red else black
+          in
+            { model | patches <- Matrix.map (\x -> { x | pcolor <- newColor }) model.patches }
+        Nothing -> compileError ["Not enough arguments for pcolor!"] model
   else
     let
       (width, height) = model.patches.size 
