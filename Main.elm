@@ -36,9 +36,14 @@ commands = Dict.fromList
    ("log-patch", LogPatch),
 
    ("add", Add),
-   ("subtract", Subtract),
    ("+", Add),
-   ("-", Subtract)
+   ("subtract", Subtract),
+   ("-", Subtract),
+   ("multiply", Multiply),
+   ("*", Multiply),
+   ("divide", Divide),
+   ("/", Divide)
+
   ]
 
 runCommand : (Command, Int) -> Model -> Model
@@ -63,6 +68,8 @@ runCommand (command, stackUses) model' =
 
       Add args -> add args model
       Subtract args -> subtract args model
+      Multiply args -> multiply args model
+      Divide args -> divide args model
 
       CompileError messages -> compileError messages model
       Clear -> clearPatches model |> emptyStack []

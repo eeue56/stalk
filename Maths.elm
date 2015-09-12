@@ -3,7 +3,7 @@ module Maths where
 import Utils exposing (alwaysOkInt)
 import Stack exposing (pushToStack)
 import Model exposing (..)
-
+import Debug exposing (log)
 
 add : Argument -> Model -> Model
 add numbers model =
@@ -20,5 +20,22 @@ subtract numbers model =
     others = List.map (\x -> -x) <| List.drop 1 numbers'
     sum = 
         List.sum <| first ++ others 
+  in 
+    pushToStack [toString sum] model
+
+multiply : Argument -> Model -> Model
+multiply numbers model =
+  let 
+    sum = List.product <| List.map (toFloat << alwaysOkInt) numbers
+  in 
+    pushToStack [toString sum] model
+
+divide : Argument -> Model -> Model
+divide numbers model =
+  let 
+    numbers' = List.map (toFloat << alwaysOkInt) numbers
+    first : Float
+    first = case List.head numbers' of Just v -> v
+    sum = List.foldl (/) (log "first" first) <| (log "numbers" <| List.drop 1 numbers')
   in 
     pushToStack [toString sum] model

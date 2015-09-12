@@ -26,6 +26,8 @@ type Command = Clear
 
   | Add Argument
   | Subtract Argument
+  | Multiply Argument
+  | Divide Argument
 
   | CompileError Argument
   | Still
