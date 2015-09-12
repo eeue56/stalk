@@ -106,12 +106,11 @@ logPatch : Argument -> Model -> Model
 logPatch args model =
   let 
     (i, j) = getCoords args model
-    patch = case Matrix.get i j model.patches of 
-      Just v -> log "Patch is: " v
-      Nothing -> log "erm" (case Matrix.get 0 0 model.patches of Just v -> v)
   in
-    (log <| toString <| patch) 
-      |> (\_ -> model)
+    case Matrix.get i j model.patches of 
+      Just v -> log "Patch is: " (toString <| v) |> (\_ -> model)
+      Nothing -> incorrectCoords args model
+      
 
 clearPatches : Model -> Model 
 clearPatches model =
