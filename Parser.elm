@@ -35,26 +35,34 @@ findCommand text dict =
           Nothing -> CompileError ["something up with this line: " ++ trimText]
 
 parse : String -> Model -> (Command, Int)
-parse someText model =
-  if not <| String.startsWith "#" someText then (findCommand someText model.commands, 0)
-    else
-      let
-        isHashAll = String.startsWith "#@" someText
-        amount = 
-          if isHashAll then List.length model.stack
-          else
-            List.length <| (String.indexes "#" someText) 
-        tail = 
-          if isHashAll then String.dropLeft 2 someText 
-          else String.dropLeft amount someText
-        args = 
-            if (List.length model.stack) - amount < 0 then
-              Nothing
-            else
-              Just <| log "erm" <| String.join "," <| List.take amount model.stack
-        joiner = if String.contains "$" someText then ", " else " $ "
-      in
-        case args of 
-          Just v -> (findCommand (log "commands" <| String.join "" [tail, joiner, v] ) model.commands, amount)
-          Nothing -> log "Nothing at head!" (CompileError ["Not enough items on stack"], 0)
+parse line model =
+  if not <| String.startsWith "#" line then (findCommand line model.commands, 0)
+  else parseStackPop line model
+      
+consumesWholeStack line =
+  String.startsWith "#@" line
+
+stackPopCount consumesWhole line model =
+  if consumesWhole then List.length model.stack
+  else List.length <| (String.indexes "#" line) 
+
+stripStackOperations consumesWhole line amount =
+  if consumesWhole then String.dropLeft 2 line
+  else String.dropLeft amount line 
         
+parseStackPop : String -> Model -> (Command, Int)
+parseStackPop line model =
+  let
+      isHashAll = consumesWholeStack line
+      amount = stackPopCount isHashAll line model
+      tail = stripStackOperations isHashAll line amount
+      args = 
+          if (List.length model.stack) - amount < 0 then
+            Nothing
+          else
+            Just <| log "erm" <| String.join "," <| List.take amount model.stack
+      joiner = if String.contains "$" line then ", " else " $ "
+    in
+      case args of 
+        Just v -> (findCommand (log "commands" <| String.join "" [tail, joiner, v] ) model.commands, amount)
+        Nothing -> log "Nothing at head!" (CompileError ["Not enough items on stack"], 0)
