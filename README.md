@@ -49,11 +49,30 @@ push $ 5, 5
 
 set-pcolor-of $ 6, 7, 120, 3, 45
 pcolor-of $ 6, 7
-; add everything on stack together and pop it back on stack
+; add everything on stack together and push it back on stack
 #@ add
 ; use the top item and push it again
 > push
 > push
 #@ set-pcolor-of $ 7, 7
 
+```
+
+
+```
+; ensure stack is empty
+#@ pop
+set-pcolor-of $ 6, 7, 120, 3, 45
+pcolor-of $ 6, 7
+; add everything on stack together and push it back on stack
+#@ add
+; use the top item and push it 
+repeat $ 2
+; 
+>>> set-pcolor-of $ 8, 8
+>>> set-pcolor-of $ 9, 8
+>>> set-pcolor-of $ 10, 8
+>>> set-pcolor-of $ 8, 9
+>>> set-pcolor-of $ 8, 11
+>>> set-pcolor-of $ 8, 12
 ```
