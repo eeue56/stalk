@@ -18,7 +18,7 @@ commands = Dict.fromList
   [("clear", always Clear),
    ("still", always Still),
    ("empty-stack", EmptyStack),
-
+   ("push", PushToStack),
 
    ("set-pcolor", SetPcolor),
    ("set-pcolor-of", SetPcolorOf),
@@ -49,6 +49,8 @@ runCommand (command, stackUses) model' =
       LogPatch coors -> logPatch coors model
 
       EmptyStack args -> emptyStack args model
+      PushToStack args -> pushToStack args model
+      
       Clear -> clearPatches model
       Still -> model
       Failed -> model

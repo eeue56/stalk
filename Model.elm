@@ -19,7 +19,9 @@ type Command = Clear
   | PycorOf Argument
   | PxycorOf Argument
   | LogPatch Argument
+
   | EmptyStack Argument
+  | PushToStack Argument
   | Still
   | Failed
 
