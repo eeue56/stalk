@@ -84,7 +84,7 @@ update action model =
     Enter -> 
       let
         model' = { model | errorMessage <- "" }
-        commands = log "commands"  <| String.lines model'.enteredText 
+        commands = List.filter (String.isEmpty) <| String.lines model'.enteredText 
       in
         List.foldl (\command model'' -> runCommand (parse command model'') model'') model' commands
     Reset -> runCommand (Clear, 0) model
