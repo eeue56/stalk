@@ -48,8 +48,8 @@ commands = Dict.fromList
 
   ]
 
-runCommand : (Command, Int) -> Model -> Model
-runCommand (command, stackUses) model' =
+runCommand : Int -> (Command, Int) -> Model -> Model
+runCommand lineNumber (command, stackUses) model' =
   let
     model = { model' | stack <- List.drop stackUses model'.stack }
   in
@@ -75,7 +75,7 @@ runCommand (command, stackUses) model' =
       Multiply args -> multiply args model
       Divide args -> divide args model
 
-      CompileError messages -> compileError messages model
+      CompileError messages -> compileError (["Error on line: " ++ toString lineNumber] ++ messages) model
       Clear -> clearPatches model |> emptyStack
       Still -> model
       Failed -> model
@@ -88,10 +88,10 @@ update action model =
     Enter -> 
       let
         model' = { model | errorMessage <- "" }
-        commands = List.filter (not << String.isEmpty) <| String.lines model'.enteredText 
+        commands = List.indexedMap (,) <| List.filter (not << String.isEmpty) <| String.lines model'.enteredText 
       in
-        List.foldl (\command model'' -> runCommand (parse command model'') model'') model' commands
-    Reset -> runCommand (Clear, 0) model
+        List.foldl (\(lineNumber, command) model'' -> runCommand lineNumber (parse command model'') model'') model' commands
+    Reset -> runCommand 0 (Clear, 0) model
     Noop -> model
 
 model' : Model
