@@ -5,8 +5,8 @@ import Parser exposing (..)
 import String
 
 
-emptyStack : Argument -> Model -> Model
-emptyStack _ model = 
+emptyStack : Model -> Model
+emptyStack model = 
   { model | stack <- [] }
 
 popOffStack : Argument -> Model -> Model

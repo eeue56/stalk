@@ -21,7 +21,7 @@ commands = Dict.fromList
    ("failed", always Failed),
    ("error", CompileError),
 
-   ("empty-stack", EmptyStack),
+   ("empty-stack", always EmptyStack),
    ("push", PushToStack),
    ("pop", PopOffStack),
    ("repeat", RepeatTopOfStack),
@@ -64,7 +64,7 @@ runCommand (command, stackUses) model' =
 
       LogPatch coors -> logPatch coors model
 
-      EmptyStack args -> emptyStack args model
+      EmptyStack -> emptyStack model
       PushToStack args -> pushToStack args model
       PopOffStack args -> popOffStack args model
       RepeatTopOfStack args -> repeatTopOfStack args model
@@ -76,7 +76,7 @@ runCommand (command, stackUses) model' =
       Divide args -> divide args model
 
       CompileError messages -> compileError messages model
-      Clear -> clearPatches model |> emptyStack []
+      Clear -> clearPatches model |> emptyStack
       Still -> model
       Failed -> model
       _ -> log "Not found" model

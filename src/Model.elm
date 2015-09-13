@@ -20,7 +20,7 @@ type Command = Clear
   | PxycorOf Argument
   | LogPatch Argument
 
-  | EmptyStack Argument
+  | EmptyStack
   | PopOffStack Argument
   | PushToStack Argument
   | RepeatTopOfStack Argument
