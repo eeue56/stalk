@@ -48,7 +48,19 @@ commands = Dict.fromList
    ("/", Divide),
 
    ("eq", Equals),
-   ("==", Equals)
+   ("==", Equals),
+   ("not-eq", NotEquals),
+   ("/=", NotEquals),
+
+   ("lt", LessThan),
+   ("<", LessThan),
+   ("lt-or-eq", LessThanOrEqual),
+   ("<=", LessThanOrEqual),
+
+   ("mt", MoreThan),
+   (">", MoreThan),
+   ("mt-or-eq", MoreThanOrEqual),
+   (">=", MoreThanOrEqual),
 
   ]
 
@@ -80,6 +92,11 @@ runCommand lineNumber (command, stackUses) model' =
       Divide args -> divide args model
 
       Equals args -> eq args model
+      NotEquals args -> notEq args model
+      MoreThan args -> moreThan args model
+      MoreThanOrEqual args -> moreThanOrEqual args model
+      LessThan args -> lessThan args model
+      LessThanOrEqual args -> lessThanOrEqual args model
 
       CompileError messages -> compileError (["Error on line: " ++ toString lineNumber] ++ messages) model
       Clear -> clearPatches model |> emptyStack

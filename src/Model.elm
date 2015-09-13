@@ -32,6 +32,12 @@ type Command = Clear
   | Divide Argument
 
   | Equals Argument
+  | NotEquals Argument
+  | LessThan Argument
+  | LessThanOrEqual Argument
+  | MoreThan Argument
+  | MoreThanOrEqual Argument
+
 
   | CompileError Argument
   | Still
