@@ -24,6 +24,7 @@ type Command = Clear
   | PopOffStack Argument
   | PushToStack Argument
   | RepeatTopOfStack Argument
+  | BringToTopOfStack Argument
   | SwapTopOfStack
 
   | Add Argument
@@ -34,9 +35,9 @@ type Command = Clear
   | Equals Argument
   | NotEquals Argument
   | LessThan Argument
-  | LessThanOrEqual Argument
+  | LessThanOrEquals Argument
   | MoreThan Argument
-  | MoreThanOrEqual Argument
+  | MoreThanOrEquals Argument
 
 
   | CompileError Argument

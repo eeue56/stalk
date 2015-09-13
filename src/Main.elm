@@ -27,6 +27,7 @@ commands = Dict.fromList
    ("pop", PopOffStack),
    ("repeat", RepeatTopOfStack),
    ("swap", always SwapTopOfStack),
+   ("top", BringToTopOfStack),
 
    ("set-pcolor", SetPcolor),
    ("set-pcolor-of", SetPcolorOf),
@@ -54,13 +55,13 @@ commands = Dict.fromList
 
    ("lt", LessThan),
    ("<", LessThan),
-   ("lt-or-eq", LessThanOrEqual),
-   ("<=", LessThanOrEqual),
+   ("lt-or-eq", LessThanOrEquals),
+   ("<=", LessThanOrEquals),
 
    ("mt", MoreThan),
    (">", MoreThan),
-   ("mt-or-eq", MoreThanOrEqual),
-   (">=", MoreThanOrEqual),
+   ("mt-or-eq", MoreThanOrEquals),
+   (">=", MoreThanOrEquals)
 
   ]
 
@@ -85,6 +86,7 @@ runCommand lineNumber (command, stackUses) model' =
       PopOffStack args -> popOffStack args model
       RepeatTopOfStack args -> repeatTopOfStack args model
       SwapTopOfStack -> Stack.swap model
+      BringToTopOfStack args -> bringToTopOfStack args model
 
       Add args -> add args model
       Subtract args -> subtract args model
@@ -94,9 +96,9 @@ runCommand lineNumber (command, stackUses) model' =
       Equals args -> eq args model
       NotEquals args -> notEq args model
       MoreThan args -> moreThan args model
-      MoreThanOrEqual args -> moreThanOrEqual args model
+      MoreThanOrEquals args -> moreThanOrEquals args model
       LessThan args -> lessThan args model
-      LessThanOrEqual args -> lessThanOrEqual args model
+      LessThanOrEquals args -> lessThanOrEquals args model
 
       CompileError messages -> compileError (["Error on line: " ++ toString lineNumber] ++ messages) model
       Clear -> clearPatches model |> emptyStack
