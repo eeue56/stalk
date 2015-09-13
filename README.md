@@ -12,11 +12,27 @@ Whitespace is a fairly nice esoteric language, for which I have an implementatio
 
 elm-netlogo aims to be a simple language, bridging whitespace and Netlogo, just like every programmer has ever wished for.
 
-###Rough clone of NetLogo written in Elm.
+## Notes
 
-While working on a proper parser, at the moment the language is stack-based with inspiration from whitespace. 
+If it hits an error, it will just keep going. It will give you an error message, abort the current line, then try to run the rest of the program.
+This can give some interesting if subtle errors.
+
+Empty lines are ignored.
+
+The stack is string-only
 
 ## Syntax
+
+`TODO: improve this`
+
+### Comments
+
+Use `;` for comments, eg
+
+```
+; hello world
+push $ hello world
+```
 
 `#` is used to push things off the stack as arguments to the command following
 
