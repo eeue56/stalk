@@ -6,13 +6,22 @@ import Debug exposing (log)
 
 import Model exposing (..)
 
+{-|
+TODO: seperate runtimeErrors from compiletime errors
+-}
 runtimeError : Argument -> Model -> Model
 runtimeError = compileError
 
+{-|
+add a compile error to the model
+-}
 compileError : Argument -> Model -> Model
 compileError messages model =
   { model | errorMessage <- String.join "\n" <| (model.errorMessage) :: messages }
 
+{-|
+add a command not found error to the error log
+-}
 commandNotFound : CommandLibrary -> String -> Command
 commandNotFound dict command  =
   let
@@ -22,6 +31,9 @@ commandNotFound dict command  =
   in
     CompileError ["command not found: " ++ command ++ helpWarning]
 
+{-|
+takes text, tries to extract command and args, then return them
+-}
 findCommand : String -> CommandLibrary -> Command
 findCommand text dict =
   let
@@ -47,23 +59,37 @@ findCommand text dict =
             Nothing -> commandNotFound' v
           Nothing -> CompileError ["something up with this line: " ++ trimText]
 
+{-|
+returns true if the line starts with the @ symbol
+-}
 consumesWholeStack : String -> Bool
 consumesWholeStack line =
   String.startsWith "@" line
 
+{-|
+the amount of stack operations
+-}
 stackOpCount : String -> Bool -> String -> Model -> Int
 stackOpCount op consumesWhole line model =
   if consumesWhole then List.length model.stack
   else List.length <| (String.indexes op line) 
 
+
 stackPopCount = stackOpCount "#" 
 stackUseCount = stackOpCount ">"
 
+{-|
+remove stack operations from the front of the line
+-}
 stripStackOperations : Bool -> String -> Int -> String
 stripStackOperations consumesWhole line amount =
   if consumesWhole then String.dropLeft 2 line
   else String.dropLeft amount line 
-        
+
+
+{-|
+  take a line, get the stack items, find the command and send the stack items as arguments
+-}        
 parseStackPop : String -> Model -> (Command, Int)
 parseStackPop line model =
   let
@@ -79,6 +105,9 @@ parseStackPop line model =
         Just v -> (findCommand (log "commands" <| String.join "" [tail, joiner, v] ) model.commands, amount)
         Nothing -> log "Nothing at head!" (CompileError ["Not enough items on stack with: " ++ line], 0)
 
+{-|
+  take a line, get the stack items, find the command and send the stack items as arguments
+-}   
 parseStackUse : String -> Model -> (Command, Int)
 parseStackUse line model =
   let

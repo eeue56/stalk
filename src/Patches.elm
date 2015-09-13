@@ -15,21 +15,35 @@ incorrectCoords : Argument -> Model -> Model
 incorrectCoords args model =
   runtimeError ["invalid coords: " ++ String.join ", " args] model
 
+{-|
+take the first two items from Arguments as i and j
+if they fail to parse to ints or not enough, then return width + 1,
+causing Matrix.get to return Nothing and allowing errors down the chain
+-}
 getCoords : Argument -> Model -> (Int, Int)
 getCoords args model = 
   let
     (width, height) = model.patches.size
     i = 
       case List.head args of 
-        Just x -> alwaysOkInt <| x
+        Just x -> 
+          case String.toInt x of
+            Ok v -> v
+            Err _ -> width + 1
         Nothing -> width + 1
     j = 
       case List.head (List.drop 1 args) of 
-        Just v -> alwaysOkInt <| v
+        Just x -> 
+          case String.toInt x of
+            Ok v -> v
+            Err _ -> height + 1
         Nothing -> height + 1
   in 
     (i, j)
 
+{-|
+get the pcolor of a patch at i, j and push it to stack 
+-}
 pcolorOf : Argument -> Model -> Model
 pcolorOf args model = 
   let
@@ -43,6 +57,9 @@ pcolorOf args model =
             List.foldl Stack.push model <| List.map toString <| List.reverse [color.red, color.green, color.blue]
         Nothing -> incorrectCoords args model
 
+{-|
+get the pxcor of a patch at i, j and push it to stack 
+-}
 pxcorOf : Argument -> Model -> Model
 pxcorOf args model =
   let
@@ -52,6 +69,9 @@ pxcorOf args model =
       Just v -> Stack.push (toString  v.pxcor) model
       Nothing -> incorrectCoords args model
 
+{-|
+get the pycor of a patch at i, j and push it to stack 
+-}
 pycorOf : Argument -> Model -> Model
 pycorOf args model =
   let
@@ -61,6 +81,9 @@ pycorOf args model =
       Just v -> Stack.push (toString  v.pycor) model
       Nothing -> incorrectCoords args model
 
+{-|
+get the pxycor of a patch at i, j and push it to stack 
+-}
 pxycorOf : Argument -> Model -> Model
 pxycorOf args model =
   let
@@ -70,6 +93,9 @@ pxycorOf args model =
       Just v -> List.foldl Stack.push model <| List.reverse <| List.map toString [v.pxcor, v.pycor]
       Nothing -> incorrectCoords args model
 
+{-|
+set the pcolor of all patches
+-}
 setPcolor : Argument -> Model -> Model
 setPcolor color model =
   if List.length color == 1 then
@@ -90,6 +116,9 @@ setPcolor color model =
     in
       { model | patches <- Matrix.map (\x -> { x | pcolor <- newColor }) model.patches }
 
+{-|
+  set the pcolor of the patch at i, j
+-}
 setPcolorOf : Argument -> Model -> Model
 setPcolorOf args model =
   let
@@ -102,6 +131,9 @@ setPcolorOf args model =
       Just _ -> { model | patches <- Matrix.update i j update model.patches }
       Nothing -> incorrectCoords args model
 
+{-|
+log a patch to console.log
+-}
 logPatch : Argument -> Model -> Model
 logPatch args model =
   let 
@@ -112,6 +144,9 @@ logPatch args model =
       Nothing -> incorrectCoords args model
       
 
+{-|
+reset patches to default
+-}
 clearPatches : Model -> Model 
 clearPatches model =
   let
