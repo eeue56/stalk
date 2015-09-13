@@ -69,6 +69,7 @@ pcolor-of $ 6, 7
 
 ```
 
+This example shows how to use the `>` operator to maintain context for a particular operation.
 
 ```
 ; ensure stack is empty
