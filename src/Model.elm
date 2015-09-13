@@ -31,6 +31,8 @@ type Command = Clear
   | Multiply Argument
   | Divide Argument
 
+  | Equals Argument
+
   | CompileError Argument
   | Still
   | Failed

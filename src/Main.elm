@@ -8,6 +8,7 @@ import Model exposing (..)
 import Patches exposing (..)
 import Stack exposing (..)
 import Maths exposing (..)
+import Cmp exposing (..)
 
 import Views exposing (..)
 import Parser exposing (..)
@@ -44,7 +45,10 @@ commands = Dict.fromList
    ("multiply", Multiply),
    ("*", Multiply),
    ("divide", Divide),
-   ("/", Divide)
+   ("/", Divide),
+
+   ("eq", Equals),
+   ("==", Equals)
 
   ]
 
@@ -74,6 +78,8 @@ runCommand lineNumber (command, stackUses) model' =
       Subtract args -> subtract args model
       Multiply args -> multiply args model
       Divide args -> divide args model
+
+      Equals args -> eq args model
 
       CompileError messages -> compileError (["Error on line: " ++ toString lineNumber] ++ messages) model
       Clear -> clearPatches model |> emptyStack
