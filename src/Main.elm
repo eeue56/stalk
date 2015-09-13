@@ -14,7 +14,6 @@ import Views exposing (..)
 import Parser exposing (..)
 
 
-
 commands : CommandLibrary
 commands = Dict.fromList
   [("clear", always Clear),
@@ -137,7 +136,5 @@ model = Signal.foldp
   update
   model'
   enteredCommands.signal
-
-
 
 main = Signal.map (view enteredCommands.address) model
