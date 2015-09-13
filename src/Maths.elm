@@ -3,6 +3,7 @@ module Maths where
 import Utils exposing (alwaysOkInt)
 import Stack exposing (pushToStack)
 import Model exposing (..)
+import Parser exposing (runtimeError)
 import Debug exposing (log)
 
 add : Argument -> Model -> Model
@@ -29,7 +30,7 @@ multiply numbers model =
     sum = List.product <| List.map (toFloat << alwaysOkInt) numbers
   in 
     pushToStack [toString sum] model
-    
+
 {-|
 TODO: clean up and watch for unguarded case..of
 -}
@@ -37,8 +38,7 @@ divide : Argument -> Model -> Model
 divide numbers model =
   let 
     numbers' = List.map (toFloat << alwaysOkInt) numbers
-    first : Float
-    first = case List.head numbers' of Just v -> v
-    sum = List.foldl (/) first <| List.drop 1 numbers'
   in 
-    pushToStack [toString sum] model
+    case List.head numbers' of 
+      Just v -> pushToStack [toString <| List.foldl (/) v <| List.drop 1 numbers'] model 
+      Nothing -> runtimeError ["not enough arguments!"] model
