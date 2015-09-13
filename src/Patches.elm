@@ -7,13 +7,13 @@ import Debug exposing (log)
 
 import Model exposing (..)
 import Utils exposing (..)
-import Parser exposing (compileError)
+import Parser exposing (runtimeError)
 import Stack
 
 
 incorrectCoords : Argument -> Model -> Model
 incorrectCoords args model =
-  compileError ["incorrect coords: " ++ String.join ", " args] model
+  runtimeError ["invalid coords: " ++ String.join ", " args] model
 
 getCoords : Argument -> Model -> (Int, Int)
 getCoords args model = 
@@ -82,7 +82,7 @@ setPcolor color model =
             newColor = if String.trim v == "red" then red else black
           in
             { model | patches <- Matrix.map (\x -> { x | pcolor <- newColor }) model.patches }
-        Nothing -> compileError ["Not enough arguments for pcolor!"] model
+        Nothing -> runtimeError ["Not enough arguments for pcolor!"] model
   else
     let
       (width, height) = model.patches.size 
@@ -98,7 +98,9 @@ setPcolorOf args model =
     newColor = rgbFromList rgb
     update = (\p -> { p | pcolor <- newColor })
   in
-    { model | patches <- Matrix.update i j update model.patches }
+    case Matrix.get i j model.patches of
+      Just _ -> { model | patches <- Matrix.update i j update model.patches }
+      Nothing -> incorrectCoords args model
 
 logPatch : Argument -> Model -> Model
 logPatch args model =

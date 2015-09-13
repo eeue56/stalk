@@ -6,6 +6,9 @@ import Debug exposing (log)
 
 import Model exposing (..)
 
+runtimeError : Argument -> Model -> Model
+runtimeError = compileError
+
 compileError : Argument -> Model -> Model
 compileError messages model =
   { model | errorMessage <- String.join "\n" <| (model.errorMessage) :: messages }
