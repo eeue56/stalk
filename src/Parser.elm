@@ -87,23 +87,31 @@ stripStackOperations consumesWhole line amount =
   else String.dropLeft amount line 
 
 
+parseStacking : String -> Model -> Bool -> Int -> Int -> (Command, Int)
+parseStacking line model isAll amountOfOps ops =
+  let
+    tail = stripStackOperations isAll line amountOfOps
+    args = 
+          if (List.length model.stack) - amountOfOps < 0 then Nothing
+          else Just <| log "erm" <| String.join "," <| List.take amountOfOps model.stack
+    joiner = if String.contains "$" tail then ", " else " $ "
+  in
+    case args of 
+      Just v -> 
+        (findCommand (log "commands" <| String.join "" [tail, joiner, v] ) model.commands, ops)
+      Nothing -> 
+        log "Nothing at head!" (CompileError ["Not enough items on stack with: " ++ line], 0)
+
 {-|
   take a line, get the stack items, find the command and send the stack items as arguments
 -}        
 parseStackPop : String -> Model -> (Command, Int)
 parseStackPop line model =
   let
-      isHashAll = consumesWholeStack <| String.dropLeft 1 line
-      amount = stackPopCount isHashAll line model
-      tail = stripStackOperations isHashAll line amount
-      args = 
-          if (List.length model.stack) - amount < 0 then Nothing
-          else Just <| log "erm" <| String.join "," <| List.take amount model.stack
-      joiner = if String.contains "$" line then ", " else " $ "
-    in
-      case args of 
-        Just v -> (findCommand (log "commands" <| String.join "" [tail, joiner, v] ) model.commands, amount)
-        Nothing -> log "Nothing at head!" (CompileError ["Not enough items on stack with: " ++ line], 0)
+    isAll = consumesWholeStack <| String.dropLeft 1 line
+    amount = stackPopCount isAll line model
+  in
+    parseStacking line model isAll amount amount
 
 {-|
   take a line, get the stack items, find the command and send the stack items as arguments
@@ -111,17 +119,10 @@ parseStackPop line model =
 parseStackUse : String -> Model -> (Command, Int)
 parseStackUse line model =
   let
-      isAll = consumesWholeStack <| String.dropLeft 1 line
-      amount = stackUseCount isAll line model
-      tail = stripStackOperations isAll line amount
-      args = 
-          if (List.length model.stack) - amount < 0 then Nothing
-          else Just <| log "erm" <| String.join "," <| List.take amount model.stack
-      joiner = if String.contains "$" line then ", " else " $ "
-    in
-      case args of 
-        Just v -> (findCommand (log "commands" <| String.join "" [tail, joiner, v] ) model.commands, 0)
-        Nothing -> log "Nothing at head!" (CompileError ["Not enough items on stack with: " ++ line], 0)
+    isAll = consumesWholeStack <| String.dropLeft 1 line
+    amount = stackUseCount isAll line model
+  in
+    parseStacking line model isAll amount 0
 
 isStackOp : String -> Bool
 isStackOp line =
