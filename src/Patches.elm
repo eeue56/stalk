@@ -1,6 +1,7 @@
 module Patches where
 
 import Matrix exposing (Matrix)
+import Dict
 import Color exposing (Color, black, red, green, blue, rgb)
 import String
 import Debug exposing (log)
@@ -55,6 +56,31 @@ patchAsString patch =
     "pxcor = " ++ (toString patch.pxcor),
     "pycor = " ++ (toString patch.pycor)
   ]
+
+patchFromString : String -> Maybe Patch
+patchFromString patchString = 
+  let
+    bits = String.split "~" patchString
+    asDict = 
+      Dict.fromList
+      <| List.map (\xs -> 
+        case xs of
+          x::y::[] -> (x, y)
+          _ -> ("", ""))
+      <| List.map (String.split " = ") bits
+  in
+    case Dict.get "pxcor" asDict of 
+      Just pxcor ->
+        case Dict.get "pxcor" asDict of
+          Just pycor -> 
+            case Dict.get "pcolor" asDict of
+              Just pcolor -> 
+                Just { pxcor = alwaysOkInt pxcor, 
+                       pycor = alwaysOkInt pycor,
+                       pcolor = rgbFromList <| String.split " " pcolor }
+              Nothing -> Nothing
+          Nothing -> Nothing
+      Nothing -> Nothing
 
 patchAt : Argument -> Model -> Model
 patchAt args model = 
