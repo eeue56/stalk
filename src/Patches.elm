@@ -1,7 +1,7 @@
 module Patches where
 
 import Matrix exposing (Matrix)
-import Dict
+
 import Color exposing (Color, black, red, green, blue, rgb)
 import String
 import Debug exposing (log)
@@ -10,6 +10,7 @@ import Model exposing (..)
 import Utils exposing (..)
 import Parser exposing (runtimeError)
 import Stack
+import Patches.Encoding exposing (..)
 
 
 incorrectCoords : Argument -> Model -> Model
@@ -42,53 +43,16 @@ getCoords args model =
   in 
     (i, j)
 
-patchColorAsString : Patch -> List String
-patchColorAsString p =
-  let
-    color = Color.toRgb p.pcolor
-  in
-    List.map toString <| List.reverse [color.red, color.green, color.blue]
-
-patchAsString : Patch -> String
-patchAsString patch =
-  String.join "~" [
-    "pcolor = " ++ (String.join " " <| patchColorAsString patch),
-    "pxcor = " ++ (toString patch.pxcor),
-    "pycor = " ++ (toString patch.pycor)
-  ]
-
-patchFromString : String -> Maybe Patch
-patchFromString patchString = 
-  let
-    bits = String.split "~" patchString
-    asDict = 
-      Dict.fromList
-      <| List.map (\xs -> 
-        case xs of
-          x::y::[] -> (x, y)
-          _ -> ("", ""))
-      <| List.map (String.split " = ") bits
-  in
-    case Dict.get "pxcor" asDict of 
-      Just pxcor ->
-        case Dict.get "pxcor" asDict of
-          Just pycor -> 
-            case Dict.get "pcolor" asDict of
-              Just pcolor -> 
-                Just { pxcor = alwaysOkInt pxcor, 
-                       pycor = alwaysOkInt pycor,
-                       pcolor = rgbFromList <| String.split " " pcolor }
-              Nothing -> Nothing
-          Nothing -> Nothing
-      Nothing -> Nothing
-
 patchAt : Argument -> Model -> Model
 patchAt args model = 
   let
     (i, j) = getCoords args model
   in
     case Matrix.get i j model.patches of
-      Just v -> Stack.push (patchAsString v) model
+      Just v -> 
+        case patchFromString <| patchAsString v of
+          Just p -> Stack.push (patchAsString p) model
+          Nothing -> runtimeError ["decoding failed!"] model
       Nothing -> incorrectCoords args model
 
 {-|
