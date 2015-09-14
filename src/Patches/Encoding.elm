@@ -6,7 +6,7 @@ import String
 
 import Utils exposing (..)
 import Model exposing (..)
-import Parser exposing (runtimeError)
+import Parser.Errors exposing (runtimeError)
 
 
 patchColorAsString : Patch -> List String

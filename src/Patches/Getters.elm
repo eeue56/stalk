@@ -5,7 +5,7 @@ import Matrix exposing (Matrix)
 
 import Model exposing (..)
 import Utils exposing (..)
-import Parser exposing (runtimeError)
+import Parser.Errors exposing (runtimeError)
 import Stack
 
 import Patches.Utils exposing (..)

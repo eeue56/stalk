@@ -15,7 +15,9 @@ import Maths exposing (..)
 import Cmp exposing (..)
 
 import Views exposing (..)
+
 import Parser exposing (..)
+import Parser.Errors exposing (compileError)
 
 
 commands : CommandLibrary
