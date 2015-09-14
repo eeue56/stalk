@@ -1,7 +1,7 @@
 module Cmp where
 
 import Model exposing (..)
-import Parser exposing (runtimeError)
+import Parser.Errors exposing (runtimeError)
 import Stack
 
 cmpEngine : (String -> String -> Bool) -> Argument -> Model -> Model

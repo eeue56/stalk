@@ -8,7 +8,7 @@ import Debug exposing (log)
 
 import Model exposing (..)
 import Utils exposing (..)
-import Parser exposing (runtimeError)
+import Parser.Errors exposing (runtimeError)
 import Stack
 import Patches.Utils exposing (..)
 import Patches.Encoding exposing (..)

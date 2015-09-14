@@ -3,7 +3,7 @@ module Maths where
 import Utils exposing (alwaysOkInt)
 import Stack exposing (pushToStack)
 import Model exposing (..)
-import Parser exposing (runtimeError)
+import Parser.Errors exposing (runtimeError)
 import Debug exposing (log)
 
 add : Argument -> Model -> Model

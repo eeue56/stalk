@@ -4,6 +4,8 @@ import Model exposing (..)
 import Parser exposing (..)
 import String exposing (toInt)
 
+import Parser.Errors exposing (compileError, runtimeError)
+
 emptyStack : Model -> Model
 emptyStack model = 
   { model | stack <- [] }
