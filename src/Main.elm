@@ -27,6 +27,7 @@ commands = Dict.fromList
    ("failed", always Failed),
    ("error", CompileError),
 
+   -- stack operations
    ("empty-stack", always EmptyStack),
    ("push", PushToStack),
    ("pop", PopOffStack),
@@ -34,17 +35,21 @@ commands = Dict.fromList
    ("swap", always SwapTopOfStack),
    ("top", BringToTopOfStack),
 
+   -- setters to do with patches
    ("set-pcolor", SetPcolor),
    ("set-pcolor-of", SetPcolorOf),
 
+   -- patch getters
    ("patch-at", PatchAt),
    ("pcolor-of", PcolorOf),
    ("pxcor-of", PxcorOf),
    ("pycor-of", PycorOf),
    ("pxycor-of", PxycorOf),
 
+   -- patch loggers
    ("log-patch", LogPatch),
 
+   -- math operations
    ("add", Add),
    ("+", Add),
    ("subtract", Subtract),
@@ -54,6 +59,7 @@ commands = Dict.fromList
    ("divide", Divide),
    ("/", Divide),
 
+   -- comparison operations
    ("eq", Equals),
    ("==", Equals),
    ("not-eq", NotEquals),
