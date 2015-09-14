@@ -41,6 +41,15 @@ getCoords args model =
   in 
     (i, j)
 
+patchAt : Argument -> Model -> Model
+patchAt args model = 
+  let
+    (i, j) = getCoords args model
+  in
+    case Matrix.get i j model.patches of
+      Just v -> Stack.push (toString v) model
+      Nothing -> incorrectCoords args model
+
 {-|
 get the pcolor of a patch at i, j and push it to stack 
 -}
@@ -49,13 +58,13 @@ pcolorOf args model =
   let
     (i, j) = getCoords args model
   in
-      case Matrix.get i j model.patches of
-        Just v -> 
-          let 
-            color = Color.toRgb v.pcolor
-          in 
-            List.foldl Stack.push model <| List.map toString <| List.reverse [color.red, color.green, color.blue]
-        Nothing -> incorrectCoords args model
+    case Matrix.get i j model.patches of
+      Just v -> 
+        let 
+          color = Color.toRgb v.pcolor
+        in 
+          List.foldl Stack.push model <| List.map toString <| List.reverse [color.red, color.green, color.blue]
+      Nothing -> incorrectCoords args model
 
 {-|
 get the pxcor of a patch at i, j and push it to stack 

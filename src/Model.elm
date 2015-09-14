@@ -19,6 +19,7 @@ type Command = Clear
   | PycorOf Argument
   | PxycorOf Argument
   | LogPatch Argument
+  | PatchAt Argument
 
   | EmptyStack
   | PopOffStack Argument
@@ -66,6 +67,6 @@ type alias Model = {
   height : Int,
 
   stack : List String,
-  
+
 
   patchSize : Float }

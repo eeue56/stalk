@@ -31,6 +31,7 @@ commands = Dict.fromList
    ("set-pcolor", SetPcolor),
    ("set-pcolor-of", SetPcolorOf),
 
+   ("patch-at", PatchAt),
    ("pcolor-of", PcolorOf),
    ("pxcor-of", PxcorOf),
    ("pycor-of", PycorOf),
@@ -73,6 +74,7 @@ runCommand lineNumber (command, stackUses) model' =
       SetPcolor color -> setPcolor color model
       SetPcolorOf args -> setPcolorOf args model
 
+      PatchAt args -> patchAt args model
       PcolorOf args -> pcolorOf args model
       PxcorOf args -> pxcorOf args model
       PycorOf args -> pycorOf args model
