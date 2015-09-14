@@ -5,7 +5,11 @@ import String
 import Debug exposing (log)
 
 import Model exposing (..)
+
 import Patches exposing (..)
+import Patches.Getters exposing (..)
+import Patches.Setters exposing (..)
+
 import Stack exposing (..)
 import Maths exposing (..)
 import Cmp exposing (..)
