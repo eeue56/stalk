@@ -24,6 +24,19 @@ rgbFromList vals =
   in
     rgb r g b
 
+serializeRecord : String -> String
+serializeRecord record =
+  let
+    -- remove braces
+    record' = 
+      String.join "~"
+      <| String.split ", "
+      <| String.trim 
+      <| String.dropLeft 1 
+      <| String.dropRight 1 record
+  in
+    record'
+
 
 levenshtein : String -> String -> Int
 levenshtein s1' s2' =

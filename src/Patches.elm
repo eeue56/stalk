@@ -41,13 +41,28 @@ getCoords args model =
   in 
     (i, j)
 
+patchColorAsString : Patch -> List String
+patchColorAsString p =
+  let
+    color = Color.toRgb p.pcolor
+  in
+    List.map toString <| List.reverse [color.red, color.green, color.blue]
+
+patchAsString : Patch -> String
+patchAsString patch =
+  String.join "~" [
+    "pcolor = " ++ (String.join " " <| patchColorAsString patch),
+    "pxcor = " ++ (toString patch.pxcor),
+    "pycor = " ++ (toString patch.pycor)
+  ]
+
 patchAt : Argument -> Model -> Model
 patchAt args model = 
   let
     (i, j) = getCoords args model
   in
     case Matrix.get i j model.patches of
-      Just v -> Stack.push (toString v) model
+      Just v -> Stack.push (patchAsString v) model
       Nothing -> incorrectCoords args model
 
 {-|
@@ -59,11 +74,7 @@ pcolorOf args model =
     (i, j) = getCoords args model
   in
     case Matrix.get i j model.patches of
-      Just v -> 
-        let 
-          color = Color.toRgb v.pcolor
-        in 
-          List.foldl Stack.push model <| List.map toString <| List.reverse [color.red, color.green, color.blue]
+      Just v -> List.foldl Stack.push model <| patchColorAsString v
       Nothing -> incorrectCoords args model
 
 {-|
