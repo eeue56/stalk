@@ -66,5 +66,6 @@ type alias Model = {
   height : Int,
 
   stack : List String,
+  
 
   patchSize : Float }

@@ -28,7 +28,7 @@ commandSuggestions dict command =
   <| List.take 5
   <| List.sortBy (snd) 
   <| List.filter (\(_,d) -> d < 3) 
-  <| List.map (\x -> (x,levenshtein command x)) (Dict.keys dict)
+  <| List.map (\x -> (x, levenshtein command x)) (Dict.keys dict)
 
 {-|
 add a command not found error to the error log

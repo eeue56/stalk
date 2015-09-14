@@ -98,17 +98,8 @@ set the pcolor of all patches
 -}
 setPcolor : Argument -> Model -> Model
 setPcolor color model =
-  if List.length color == 1 then
-    let
-      (width, height) = model.patches.size
-    in
-      case List.head color of
-        Just v -> 
-          let
-            newColor = if String.trim v == "red" then red else black
-          in
-            { model | patches <- Matrix.map (\x -> { x | pcolor <- newColor }) model.patches }
-        Nothing -> runtimeError ["Not enough arguments for pcolor!"] model
+  if List.length color < 3 then 
+    runtimeError ["Not enough arguments for pcolor!"] model
   else
     let
       (width, height) = model.patches.size 
