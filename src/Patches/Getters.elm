@@ -17,10 +17,7 @@ patchAt args model =
     (i, j) = getCoords args model
   in
     case Matrix.get i j model.patches of
-      Just v -> 
-        case patchFromString <| patchAsString v of
-          Just p -> Stack.push (patchAsString p) model
-          Nothing -> runtimeError ["decoding failed!"] model
+      Just v -> Stack.push (patchAsString v) model
       Nothing -> incorrectCoords args model
 
 builtinPatchGetter : (Patch -> Model -> Model) -> Argument -> Model -> Model 
@@ -46,7 +43,6 @@ get the pcolor of a patch at i, j and push it to stack
 pcolorOf : Argument -> Model -> Model
 pcolorOf = 
   builtinPatchGetter (\v model -> List.foldl Stack.push model <| patchColorAsString v)
-
 
 {-|
 get the pxcor of a patch at i, j and push it to stack 
