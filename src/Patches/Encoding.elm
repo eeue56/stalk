@@ -14,7 +14,7 @@ patchColorAsString p =
   let
     color = Color.toRgb p.pcolor
   in
-    List.map toString <| List.reverse [color.red, color.green, color.blue]
+    List.map toString <| [color.red, color.green, color.blue]
 
 patchAsString : Patch -> String
 patchAsString patch =

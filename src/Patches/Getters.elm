@@ -42,7 +42,7 @@ get the pcolor of a patch at i, j and push it to stack
 -}
 pcolorOf : Argument -> Model -> Model
 pcolorOf = 
-  builtinPatchGetter (\v model -> List.foldl Stack.push model <| patchColorAsString v)
+  builtinPatchGetter (\v model -> List.foldl Stack.push model <| List.reverse <| patchColorAsString v)
 
 {-|
 get the pxcor of a patch at i, j and push it to stack 

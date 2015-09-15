@@ -39,14 +39,14 @@ push $ hello world
 E.g 
 
 ```
-# set-pcolor-of $ 5, 6 
+### set-pcolor-of $ 5, 6 
 
 ```
 
 where the stack is
 
 ```
-["255, 0, 0"]
+["0", "0", "255"]
 ```
 
 gets turned into 
@@ -103,4 +103,22 @@ repeat $ 2
 >>> set-pcolor-of $ 8, 9
 >>> set-pcolor-of $ 8, 11
 >>> set-pcolor-of $ 8, 12
+```
+
+If you want to duplicate something off the stack, use
+
+```
+> push
+```
+
+If you want to duplicate everything off the stack, use
+
+```
+>@ push
+```
+
+if you want to clear the stack, use
+
+```
+#@ pop
 ```
