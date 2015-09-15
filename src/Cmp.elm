@@ -5,14 +5,11 @@ import Parser.Errors exposing (runtimeError)
 import Stack
 
 cmpEngine : (String -> String -> Bool) -> Argument -> Model -> Model
-cmpEngine cmp args model = 
-  case List.head args of
-    Just a -> 
-      case List.head <| List.drop 1 args of
-        Just b -> Stack.push (toString <| cmp a b) model
-        Nothing -> runtimeError ["Not enough items in args for cmp!"] model
-    Nothing -> runtimeError ["Not enough items in args for cmp!"] model
-
+cmpEngine cmp args model =
+  case args of 
+    a::b::xs -> Stack.push (toString <| cmp a b) model
+    _ -> runtimeError ["Not enough items in args for cmp!"] model
+    
 {-| 
 eq args and push result
 -}
