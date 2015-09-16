@@ -33,13 +33,9 @@ clearPatches : Model -> Model
 clearPatches model =
   let
     (width, height) = model.patches.size
-    board = List.map (\x -> List.map (\y -> defaultPatch x y) [0..width]) [0..height]
+    board = defaultPatches width height
   in
-    { model | patches <- 
-      case Matrix.fromList board of
-        Just v -> v
-        Nothing -> Matrix.empty
-        }
+    { model | patches <- board }
 
 defaultPatch x y = { pcolor = black, pxcor = x, pycor = y }
 redPatch x y = { pcolor = red, pxcor = x, pycor = y }
