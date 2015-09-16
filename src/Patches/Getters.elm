@@ -2,6 +2,7 @@ module Patches.Getters where
 
 import String
 import Matrix exposing (Matrix)
+import Debug exposing (log)
 
 import Model exposing (..)
 import Utils exposing (..)
@@ -22,20 +23,25 @@ patchAt args model =
 
 builtinPatchGetter : (Patch -> Model -> Model) -> Argument -> Model -> Model 
 builtinPatchGetter getter args model = 
-  if List.length args == 2 then
-    let
-      (i, j) = getCoords args model
-    in
-      case Matrix.get i j model.patches of
-        Just v -> getter v model
-        Nothing -> incorrectCoords args model
-  else 
-    case List.head args of
-      Just p -> 
-        case patchFromString p of
+  -- if there's two args on the stack, then assume it's patch coordinates
+  -- and use those for getting the patch 
+  case args of
+    x::y::[] ->
+      let
+        (i, j) = getCoords args model
+      in
+        case Matrix.get i j model.patches of
           Just v -> getter v model
-          Nothing -> runtimeError ["Failed to decode patch " ++ p] model
-      Nothing -> runtimeError ["Not enough arguments!"] model
+          Nothing -> incorrectCoords args model
+    x::[] -> 
+      case List.head args of
+        Just p -> 
+          case patchFromString p of
+            Just v -> getter v model
+            Nothing -> runtimeError ["Failed to decode patch " ++ p] model
+        Nothing -> runtimeError ["Not enough arguments!"] model
+    _ -> 
+      runtimeError ["Not sure what to do with arguments given"] model
 
 {-|
 get the pcolor of a patch at i, j and push it to stack 

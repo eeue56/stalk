@@ -4,6 +4,7 @@ import String
 
 import Model exposing (..)
 import Parser.Parse exposing (..)
+import Debug exposing (log)
 
 
 isStackOp : String -> Bool

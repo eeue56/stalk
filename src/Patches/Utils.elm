@@ -4,7 +4,7 @@ import String
 
 import Model exposing (..)
 import Utils exposing (..)
-import Parser exposing (runtimeError)
+import Parser.Errors exposing (runtimeError)
 
 incorrectCoords : Argument -> Model -> Model
 incorrectCoords args model =

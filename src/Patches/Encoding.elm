@@ -38,7 +38,7 @@ patchFromString patchString =
   in
     case Dict.get "pxcor" asDict of 
       Just pxcor ->
-        case Dict.get "pxcor" asDict of
+        case Dict.get "pycor" asDict of
           Just pycor -> 
             case Dict.get "pcolor" asDict of
               Just pcolor -> 
