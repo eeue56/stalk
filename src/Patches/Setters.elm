@@ -43,15 +43,14 @@ setPcolorOf args model =
         Just _ -> { model | patches <- Matrix.update i j update model.patches }
         Nothing -> incorrectCoords args model
   else
-    case List.head args of
-      Just p -> 
-        case patchFromString p of
-          Just v -> 
-            let
-              rgb = List.drop 1 args
-              newColor = rgbFromList rgb
-              update = (\p -> { p | pcolor <- newColor })
-            in
-              { model | patches <- Matrix.update v.pxcor v.pycor update model.patches }
-          Nothing -> runtimeError ["Failed to decode patch " ++ String.join ", " args] model
-      Nothing -> runtimeError ["not enough arguments!"] model
+    let
+      rgb = List.take 3 args
+      newColor = rgbFromList rgb
+      update = (\p -> { p | pcolor <- newColor })
+    in
+      case List.head <| List.drop 3 args of 
+        Just v ->
+          case patchFromString v of
+            Just p -> { model | patches <- Matrix.update p.pxcor p.pycor update model.patches }
+            Nothing -> runtimeError ["Failed to decode patch " ++ String.join ", " args] model
+        Nothing -> runtimeError ["not enough arguments!"] model
