@@ -7,6 +7,7 @@ import Debug exposing (log)
 import Model exposing (..)
 import Utils
 import Parser.Errors exposing (..)
+import Parser.Symbols as Symbols
 
 {-|
 takes text, tries to extract command and args, then return them
@@ -16,11 +17,11 @@ findCommand text dict =
   let
     commandNotFound' = commandNotFound dict
     trimText = String.trim text
-    hasArgs = String.contains "$" trimText
+    hasArgs = String.contains Symbols.funcSplitter trimText
     args = if not hasArgs then [] else
-      case Utils.splitFirst "$" trimText of 
+      case Utils.splitFirst Symbols.funcSplitter trimText of 
         (_, "") -> []
-        (cmd, x) ->List.filter (\x -> not <| x  == "") <| List.map (String.trim) <| String.split "," x
+        (cmd, x) ->List.filter (\x -> not <| x  == "") <| List.map (String.trim) <| String.split Symbols.argSplitter x
   in
     if not hasArgs 
       then 
@@ -28,7 +29,7 @@ findCommand text dict =
           Just v -> v []
           Nothing -> commandNotFound' trimText
       else
-        case List.head <| String.split "$" trimText of
+        case List.head <| String.split Symbols.funcSplitter trimText of
           Just v -> case Dict.get (String.trim v) dict of
             Just command -> command args 
             Nothing -> commandNotFound' v
@@ -50,8 +51,8 @@ stackOpCount op consumesWhole line model =
   else List.length <| (String.indexes op line) 
 
 
-stackPopCount = stackOpCount "#" 
-stackUseCount = stackOpCount ">"
+stackPopCount = stackOpCount Symbols.stackPop
+stackUseCount = stackOpCount Symbols.stackUse
 
 {-|
 remove stack operations from the front of the line
@@ -68,8 +69,8 @@ parseStacking line model isAll amountOfOps ops =
     tail = stripStackOperations isAll line amountOfOps
     args = 
           if (List.length model.stack) - amountOfOps < 0 then Nothing
-          else Just <| log "erm" <| String.join "," <| List.take amountOfOps model.stack
-    joiner = if String.contains "$" tail then ", " else " $ "
+          else Just <| log "erm" <| String.join Symbols.argSplitter <| List.take amountOfOps model.stack
+    joiner = if String.contains Symbols.funcSplitter tail then ", " else " $ "
   in
     case args of 
       Just v -> 
