@@ -5,7 +5,7 @@ import String
 import Debug exposing (log)
 
 import Model exposing (..)
-
+import Utils
 import Parser.Errors exposing (..)
 
 {-|
@@ -18,11 +18,9 @@ findCommand text dict =
     trimText = String.trim text
     hasArgs = String.contains "$" trimText
     args = if not hasArgs then [] else
-      case List.tail <| String.split "$" trimText of 
-        Just v -> case List.head v of 
-          Just x -> List.filter (\x -> not <| x  == "") <| List.map (String.trim) <| String.split "," x
-          Nothing -> []
-        Nothing -> []
+      case Utils.splitFirst "$" trimText of 
+        (_, "") -> []
+        (cmd, x) ->List.filter (\x -> not <| x  == "") <| List.map (String.trim) <| String.split "," x
   in
     if not hasArgs 
       then 

@@ -24,6 +24,15 @@ rgbFromList vals =
   in
     rgb r g b
 
+splitFirst : String -> String -> (String, String)
+splitFirst spliter string =
+  let 
+    locs = String.indexes spliter string
+  in
+    case locs of 
+      [] -> (string, "")
+      x::xs -> (String.left x string, String.dropLeft (x + 1) string)
+
 serializeRecord : String -> String
 serializeRecord record =
   let
