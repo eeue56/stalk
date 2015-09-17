@@ -58,6 +58,8 @@ commands = Dict.fromList
    ("*", Multiply),
    ("divide", Divide),
    ("/", Divide),
+   ("++", Increment),
+   ("--", Decrement),
 
    -- comparison operations
    ("eq", Equals),
@@ -108,6 +110,8 @@ runCommand lineNumber (command, stackUses) model' =
       Subtract args -> subtract args model
       Multiply args -> multiply args model
       Divide args -> divide args model
+      Increment args -> increment args model
+      Decrement args -> decrement args model
 
       Equals args -> eq args model
       NotEquals args -> notEq args model

@@ -11,7 +11,7 @@ add numbers model =
   let 
     sum = List.sum <| List.map (alwaysOkInt) numbers
   in 
-    pushToStack [toString sum] model
+    Stack.pushItem sum model
 
 subtract : Argument -> Model -> Model
 subtract numbers model =
@@ -22,14 +22,14 @@ subtract numbers model =
     sum = 
         List.sum <| first ++ others 
   in 
-    pushToStack [toString sum] model
+    Stack.pushItem sum model
 
 multiply : Argument -> Model -> Model
 multiply numbers model =
   let 
     sum = List.product <| List.map (toFloat << alwaysOkInt) numbers
   in 
-    pushToStack [toString sum] model
+    Stack.pushItem sum model
 
 {-|
 TODO: clean up and watch for unguarded case..of
@@ -40,5 +40,17 @@ divide numbers model =
     numbers' = List.map (toFloat << alwaysOkInt) numbers
   in 
     case List.head numbers' of 
-      Just v -> pushToStack [toString <| List.foldl (/) v <| List.drop 1 numbers'] model 
+      Just v -> Stack.pushItem (List.foldl (/) v <| List.drop 1 numbers') model 
       Nothing -> runtimeError ["not enough arguments!"] model
+
+increment : Argument -> Model -> Model
+increment args model = 
+  case args of 
+    [] -> runtimeError ["not enough arguments!"] model
+    xs -> List.foldl Stack.pushItem model <| List.reverse <| List.map (\x -> (alwaysOkInt x) + 1) args
+
+decrement : Argument -> Model -> Model
+decrement args model = 
+  case args of 
+    [] -> runtimeError ["not enough arguments!"] model
+    xs -> List.foldl Stack.pushItem model <| List.reverse <| List.map (\x -> (alwaysOkInt x) - 1) args

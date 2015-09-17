@@ -32,6 +32,8 @@ type Command = Clear
   | Subtract Argument
   | Multiply Argument
   | Divide Argument
+  | Increment Argument
+  | Decrement Argument
 
   | Equals Argument
   | NotEquals Argument
