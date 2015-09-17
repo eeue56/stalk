@@ -48,7 +48,7 @@ get the pcolor of a patch at i, j and push it to stack
 -}
 pcolorOf : Argument -> Model -> Model
 pcolorOf = 
-  builtinPatchGetter (\v model -> List.foldl Stack.push model <| List.reverse <| patchColorAsString v)
+  builtinPatchGetter (\v model -> Stack.pushManyStrings (List.reverse <| patchColorAsString v) model)
 
 {-|
 get the pxcor of a patch at i, j and push it to stack 
@@ -70,4 +70,4 @@ get the pxycor of a patch at i, j and push it to stack
 -}
 pxycorOf : Argument -> Model -> Model
 pxycorOf =
-  builtinPatchGetter (\v model -> List.foldl Stack.push model <| List.reverse <| List.map toString [v.pxcor, v.pycor])
+  builtinPatchGetter (\v model -> Stack.pushManyStrings (List.reverse <| List.map toString [v.pxcor, v.pycor]) model)

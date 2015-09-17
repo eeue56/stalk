@@ -47,10 +47,10 @@ increment : Argument -> Model -> Model
 increment args model = 
   case args of 
     [] -> runtimeError ["not enough arguments!"] model
-    xs -> List.foldl Stack.pushItem model <| List.reverse <| List.map (\x -> (alwaysOkInt x) + 1) args
+    xs -> Stack.pushMany (List.reverse <| List.map (\x -> (alwaysOkInt x) + 1) args) model 
 
 decrement : Argument -> Model -> Model
 decrement args model = 
   case args of 
     [] -> runtimeError ["not enough arguments!"] model
-    xs -> List.foldl Stack.pushItem model <| List.reverse <| List.map (\x -> (alwaysOkInt x) - 1) args
+    xs -> Stack.pushMany (List.reverse <| List.map (\x -> (alwaysOkInt x) - 1) args) model

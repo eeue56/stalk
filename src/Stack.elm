@@ -43,13 +43,40 @@ bringToTopOfStack args model =
         Err m -> compileError [m ++ " invalid arguments: " ++ String.join ", " args] model
     Nothing -> compileError ["not enough arguments: " ++ String.join ", " args] model
 
+{-|
+  Push a string onto the stack
+-}
 push : String -> Model -> Model
 push item model =
   { model | stack <- item :: model.stack }
 
+{-|
+  Push an item to the stack by the first converting it to string
+-}
 pushItem : a -> Model -> Model
 pushItem item model =
   push (toString item) model
+
+{-|
+  Push multiple objects to stack by converting them to string first
+  The first item in the list is pushed first, e.g
+
+  ```
+  stack = [1, 2, 3]
+  pushMany [4, 5] stack == [5, 4, 1, 2, 3]
+  
+  ```
+
+  This might not be as you expect.
+-}
+pushMany : List a -> Model -> Model
+pushMany items model = 
+  List.foldl pushItem model items
+
+pushManyStrings : List String -> Model -> Model
+pushManyStrings items model = 
+  List.foldl push model items
+
 
 swap : Model -> Model
 swap model = 
