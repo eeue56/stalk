@@ -20,7 +20,7 @@ findCommand text dict =
     args = if not hasArgs then [] else
       case List.tail <| String.split "$" trimText of 
         Just v -> case List.head v of 
-          Just x -> String.split "," x
+          Just x -> List.filter (\x -> not <| x  == "") <| List.map (String.trim) <| String.split "," x
           Nothing -> []
         Nothing -> []
   in
@@ -32,7 +32,7 @@ findCommand text dict =
       else
         case List.head <| String.split "$" trimText of
           Just v -> case Dict.get (String.trim v) dict of
-            Just command -> command <| List.map (String.trim) args 
+            Just command -> command args 
             Nothing -> commandNotFound' v
           Nothing -> CompileError ["something up with this line: " ++ trimText]
 
