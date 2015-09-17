@@ -7,7 +7,8 @@ import Stack
 cmpEngine : (String -> String -> Bool) -> Argument -> Model -> Model
 cmpEngine cmp args model =
   case args of 
-    a::b::xs -> Stack.push (toString <| cmp a b) model
+    a::b::[] -> Stack.push (toString <| cmp a b) model
+    a::b::xs -> runtimeError ["Too many arguments for cmp!"] model
     _ -> runtimeError ["Not enough items in args for cmp!"] model
     
 {-| 
@@ -45,3 +46,11 @@ more than args and push result
 -}
 moreThanOrEquals : Argument -> Model -> Model 
 moreThanOrEquals = cmpEngine (>=)
+
+true : Argument -> Model -> Model
+true args model = 
+  Stack.push (List.all (\x -> x == "True") args) model
+
+false : Argument -> Model -> Model
+false args model = 
+  Stack.push (List.any (\x -> x == "True") args) model
