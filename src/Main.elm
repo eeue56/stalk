@@ -26,6 +26,7 @@ commands = Dict.fromList
    ("still", always Still),
    ("failed", always Failed),
    ("error", CompileError),
+   ("eval", Eval),
 
    -- stack operations
    ("empty-stack", always EmptyStack),
@@ -88,6 +89,8 @@ runCommand lineNumber (command, stackUses) model' =
     model = { model' | stack <- List.drop stackUses model'.stack }
   in
     case command of
+      Eval args -> runCommand lineNumber (Parser.parse (String.join "," args) model) model
+
       SetPcolor color -> setPcolor color model
       SetPcolorOf args -> setPcolorOf args model
 

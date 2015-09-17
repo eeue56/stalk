@@ -63,6 +63,23 @@ If you want to pop everything off the stack, use `#@`
 
 # Example program
 
+eval exists
+
+```
+#@ pop
++ $ 1, 2
++ $ 7, 3
+## ++
+top $ 1
+## pcolor-of 
+set-pcolor-of $ 5, 5, 255, 0, 0
+push $ pcolor-of $ 5, 5
+## eval 
+push $ set-pcolor-of $ 6, 7
+
+##### eval
+```
+
 ```
 
 push $ 255, 255, 0

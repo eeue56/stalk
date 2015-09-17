@@ -12,6 +12,8 @@ type Action = Reset
   | Noop
 
 type Command = Clear 
+  | Eval Argument
+
   | SetPcolor Argument
   | SetPcolorOf Argument 
   | PcolorOf Argument

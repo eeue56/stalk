@@ -15,14 +15,9 @@ alwaysOkInt v =
 
 -- TODO: add to elm-simple-data
 rgbFromList vals = 
-  let
-    r = alwaysOkInt <| case List.head vals of Just v -> v
-    g = alwaysOkInt <| (\x -> case List.head x of Just v -> v) 
-      <| (case List.tail vals of Just v -> v)
-    b = alwaysOkInt <| case List.head <| List.reverse vals of Just v -> v
-    
-  in
-    rgb r g b
+  case vals of 
+    r::g::b::[] -> rgb (alwaysOkInt r) (alwaysOkInt g) (alwaysOkInt b)
+    _ -> rgb -1 -1 -1
 
 splitFirst : String -> String -> (String, String)
 splitFirst spliter string =
@@ -32,6 +27,7 @@ splitFirst spliter string =
     case locs of 
       [] -> (string, "")
       x::xs -> (String.left x string, String.dropLeft (x + 1) string)
+      _ -> (string, "")
 
 serializeRecord : String -> String
 serializeRecord record =
