@@ -49,8 +49,8 @@ moreThanOrEquals = cmpEngine (>=)
 
 true : Argument -> Model -> Model
 true args model = 
-  Stack.push (List.all (\x -> x == "True") args) model
+  Stack.pushItem (List.all (\x -> x == "True") args) model
 
 false : Argument -> Model -> Model
 false args model = 
-  Stack.push (List.any (\x -> x == "True") args) model
+  Stack.pushItem (not <| List.any (\x -> x == "True") args) model

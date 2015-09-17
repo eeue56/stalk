@@ -73,7 +73,10 @@ commands = Dict.fromList
    ("mt", MoreThan),
    (">", MoreThan),
    ("mt-or-eq", MoreThanOrEquals),
-   (">=", MoreThanOrEquals)
+   (">=", MoreThanOrEquals),
+
+   ("true", TrueTest),
+   ("false", FalseTest)
 
   ]
 
@@ -112,6 +115,8 @@ runCommand lineNumber (command, stackUses) model' =
       MoreThanOrEquals args -> moreThanOrEquals args model
       LessThan args -> lessThan args model
       LessThanOrEquals args -> lessThanOrEquals args model
+      TrueTest args -> true args model
+      FalseTest args -> false args model
 
       CompileError messages -> compileError (["Error on line: " ++ toString lineNumber] ++ messages) model
       Clear -> clearPatches model |> emptyStack

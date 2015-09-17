@@ -47,6 +47,10 @@ push : String -> Model -> Model
 push item model =
   { model | stack <- item :: model.stack }
 
+pushItem : a -> Model -> Model
+pushItem item model =
+  push (toString item) model
+
 swap : Model -> Model
 swap model = 
   let

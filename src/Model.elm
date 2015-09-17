@@ -39,7 +39,8 @@ type Command = Clear
   | LessThanOrEquals Argument
   | MoreThan Argument
   | MoreThanOrEquals Argument
-
+  | TrueTest Argument
+  | FalseTest Argument
 
   | CompileError Argument
   | Still
