@@ -19,7 +19,7 @@ This can give some interesting if subtle errors.
 
 Empty lines are ignored.
 
-The stack is string-only
+The stack is string-only. In fact, everything is a string, much like tcl. Functions are strings, as are their arguments. Internally things are converted from string at runtime, but everything is a string
 
 ## Syntax
 
@@ -58,6 +58,11 @@ set-pcolor $ 5, 6, 255, 0, 0
 If you want to pop more items off the stack, use more hashes.
 If you want to pop everything off the stack, use `#@`
 
+`>` is the a stack use - the stack remains unchanged after using it, but the effect is the same. This allows you to duplicate items on the stack by doing something like
+
+```
+> push
+```
 
 `$` is used to seperate commands from their arguments
 
