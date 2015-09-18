@@ -42,6 +42,7 @@ commands = Dict.fromList
 
    -- patch getters
    ("patch-at", PatchAt),
+   ("neighbours-of", NeighboursOf),
    ("pcolor-of", PcolorOf),
    ("pxcor-of", PxcorOf),
    ("pycor-of", PycorOf),
@@ -95,6 +96,7 @@ runCommand lineNumber (command, stackUses) model' =
       SetPcolorOf args -> setPcolorOf args model
 
       PatchAt args -> patchAt args model
+      NeighboursOf args -> neighboursOf args model
       PcolorOf args -> pcolorOf args model
       PxcorOf args -> pxcorOf args model
       PycorOf args -> pycorOf args model

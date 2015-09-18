@@ -20,8 +20,11 @@ type Command = Clear
   | PxcorOf Argument
   | PycorOf Argument
   | PxycorOf Argument
+
   | LogPatch Argument
+
   | PatchAt Argument
+  | NeighboursOf Argument
 
   | EmptyStack
   | PopOffStack Argument

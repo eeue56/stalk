@@ -2,6 +2,7 @@ module Patches.Getters where
 
 import String
 import Matrix exposing (Matrix)
+import Matrix.Extra exposing (neighbours)
 import Debug exposing (log)
 
 import Model exposing (..)
@@ -71,3 +72,7 @@ get the pxycor of a patch at i, j and push it to stack
 pxycorOf : Argument -> Model -> Model
 pxycorOf =
   builtinPatchGetter (\v model -> Stack.pushManyStrings (List.reverse <| List.map toString [v.pxcor, v.pycor]) model)
+
+neighboursOf : Argument -> Model -> Model
+neighboursOf =
+  builtinPatchGetter (\v model -> Stack.pushManyStrings (List.map (patchAsString) <| neighbours v.pxcor v.pycor model.patches) model)
