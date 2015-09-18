@@ -88,7 +88,16 @@ commands = Dict.fromList
 apply : Argument -> Model -> Model
 apply args model = 
   let 
-    command extraArgs = Parser.parse (String.join " , " <| args ++ [extraArgs]) model
+    funcPart = 
+      case args of 
+        [] -> ("$", [])
+        x::[] -> (x ++ " $ ", [])
+        x::xs -> ("", args)
+    command extraArgs = 
+      let
+        (func, args') = funcPart
+      in
+        Parser.parse (func ++ (String.join " , " <| args' ++ [extraArgs])) model
   in
   List.foldl (\extra model -> runCommand 0 (command extra) model) (Stack.emptyStack model) model.stack
 
