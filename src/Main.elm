@@ -27,6 +27,7 @@ commands = Dict.fromList
    ("failed", always Failed),
    ("error", CompileError),
    ("eval", Eval),
+   ("apply", Apply),
 
    -- stack operations
    ("empty-stack", always EmptyStack),
@@ -84,6 +85,13 @@ commands = Dict.fromList
 
   ]
 
+apply : Argument -> Model -> Model
+apply args model = 
+  let 
+    command extraArgs = Parser.parse (String.join " , " <| args ++ [extraArgs]) model
+  in
+  List.foldl (\extra model -> runCommand 0 (command extra) model) (Stack.emptyStack model) model.stack
+
 runCommand : Int -> (Command, Int) -> Model -> Model
 runCommand lineNumber (command, stackUses) model' =
   let
@@ -91,6 +99,7 @@ runCommand lineNumber (command, stackUses) model' =
   in
     case command of
       Eval args -> runCommand lineNumber (Parser.parse (String.join "," args) model) model
+      Apply args -> apply args model 
 
       SetPcolor color -> setPcolor color model
       SetPcolorOf args -> setPcolorOf args model

@@ -13,6 +13,7 @@ type Action = Reset
 
 type Command = Clear 
   | Eval Argument
+  | Apply Argument
 
   | SetPcolor Argument
   | SetPcolorOf Argument 

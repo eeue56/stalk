@@ -85,6 +85,18 @@ push $ set-pcolor-of $ 6, 7
 ##### eval
 ```
 
+You can use `apply` to apply an argument to every item on the stack
+
+```
+neighbours-of $ 5, 5
+patch-at $ 8, 14
+apply $ set-pcolor-of $ 255, 5, 5
+
+neighbours-of $ 8, 14
+patch-at $ 5, 5
+apply $ set-pcolor-of $ 0, 175, 35
+```
+
 ```
 
 push $ 255, 255, 0
