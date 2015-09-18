@@ -17,7 +17,7 @@ import Cmp exposing (..)
 import Views exposing (..)
 
 import Parser exposing (..)
-import Parser.Errors exposing (compileError)
+import Parser.Errors exposing (compileError, runtimeError)
 
 
 commands : CommandLibrary
@@ -130,8 +130,8 @@ runCommand lineNumber (command, stackUses) model' =
       CompileError messages -> compileError (["Error on line: " ++ toString lineNumber] ++ messages) model
       Clear -> clearPatches model |> emptyStack
       Still -> model
-      Failed -> model
-      _ -> log "Not found" model
+      Failed -> runtimeError ["Failed."] model
+      _ -> compileError ["Command type not found"] model
 
 update : Action -> Model -> Model
 update action model = 
