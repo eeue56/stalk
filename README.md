@@ -1,5 +1,7 @@
 # elm-netlogo
 
+A whitespace-inspired Netlogo clone with functional features.
+
 # Background
 
 If you haven't heard of [Netlogo](https://ccl.northwestern.edu/netlogo/) before, go check it out. It's a Logo derivative aimed at allowing you to create simulations through an agent-based model.
@@ -55,8 +57,8 @@ gets turned into
 set-pcolor $ 5, 6, 255, 0, 0
 ```
 
-If you want to pop more items off the stack, use more hashes.
-If you want to pop everything off the stack, use `#@`
+If you want to pop more items off the stack, use more hashes. It will push an item off the stack for each hash.
+If you want to pop everything off the stack, use `#@`. The `@` symbol is used to denote "all".
 
 `>` is the a stack use - the stack remains unchanged after using it, but the effect is the same. This allows you to duplicate items on the stack by doing something like
 
@@ -66,9 +68,11 @@ If you want to pop everything off the stack, use `#@`
 
 `$` is used to seperate commands from their arguments
 
+If a command has no arguments, then it's not needed.
+
 # Example program
 
-eval exists
+Using eval
 
 ```
 #@ pop
