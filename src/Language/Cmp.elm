@@ -1,8 +1,8 @@
-module Cmp where
+module Language.Cmp where
 
 import Model exposing (..)
 import Parser.Errors exposing (runtimeError)
-import Stack
+import Language.Stack as Stack
 
 cmpEngine : (String -> String -> Bool) -> Argument -> Model -> Model
 cmpEngine cmp args model =

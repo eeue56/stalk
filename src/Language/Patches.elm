@@ -1,4 +1,4 @@
-module Patches where
+module Language.Patches where
 
 import Matrix exposing (Matrix)
 
@@ -9,9 +9,10 @@ import Debug exposing (log)
 import Model exposing (..)
 import Utils exposing (..)
 import Parser.Errors exposing (runtimeError)
-import Stack
-import Patches.Utils exposing (..)
-import Patches.Encoding exposing (..)
+
+import Language.Stack as Stack
+import Language.Patches.Utils exposing (..)
+import Language.Patches.Encoding exposing (..)
 
 {-|
 log a patch to console.log

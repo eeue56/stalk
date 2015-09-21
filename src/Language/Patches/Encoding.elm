@@ -1,4 +1,4 @@
-module Patches.Encoding where
+module Language.Patches.Encoding where
 
 import Dict
 import Color exposing (Color, black, red, green, blue, rgb)

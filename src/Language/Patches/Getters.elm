@@ -1,4 +1,4 @@
-module Patches.Getters where
+module Language.Patches.Getters where
 
 import String
 import Matrix exposing (Matrix)
@@ -8,10 +8,10 @@ import Debug exposing (log)
 import Model exposing (..)
 import Utils exposing (..)
 import Parser.Errors exposing (runtimeError)
-import Stack
+import Language.Stack as Stack
 
-import Patches.Utils exposing (..)
-import Patches.Encoding exposing (..)
+import Language.Patches.Utils exposing (..)
+import Language.Patches.Encoding exposing (..)
 
 patchAt : Argument -> Model -> Model
 patchAt args model = 

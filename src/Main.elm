@@ -6,18 +6,19 @@ import Debug exposing (log)
 
 import Model exposing (..)
 
-import Patches exposing (..)
-import Patches.Getters exposing (..)
-import Patches.Setters exposing (..)
+import Language.Patches exposing (..)
+import Language.Patches.Getters exposing (..)
+import Language.Patches.Setters exposing (..)
 
-import Stack exposing (..)
-import Maths exposing (..)
-import Cmp exposing (..)
+import Language.Stack exposing (..)
+import Language.Maths exposing (..)
+import Language.Cmp exposing (..)
 
 import Views exposing (..)
 
 import Parser exposing (..)
 import Parser.Errors exposing (compileError, runtimeError)
+import Parser.Runner exposing (..)
 
 
 commands : CommandLibrary
@@ -84,72 +85,6 @@ commands = Dict.fromList
    ("false", FalseTest)
 
   ]
-
-apply : Argument -> Model -> Model
-apply args model = 
-  let 
-    funcPart = 
-      case args of 
-        [] -> ("$", [])
-        x::[] -> (x ++ " $ ", [])
-        x::xs -> ("", args)
-    command extraArgs = 
-      let
-        (func, args') = funcPart
-      in
-        Parser.parse (func ++ (String.join " , " <| args' ++ [extraArgs])) model
-  in
-  List.foldl (\extra model -> runCommand 0 (command extra) model) (Stack.emptyStack model) model.stack
-
-runCommand : Int -> (Command, Int) -> Model -> Model
-runCommand lineNumber (command, stackUses) model' =
-  let
-    model = { model' | stack <- List.drop stackUses model'.stack }
-  in
-    case command of
-      Eval args -> runCommand lineNumber (Parser.parse (String.join "," args) model) model
-      Apply args -> apply args model 
-
-      SetPcolor color -> setPcolor color model
-      SetPcolorOf args -> setPcolorOf args model
-
-      PatchAt args -> patchAt args model
-      NeighboursOf args -> neighboursOf args model
-      PcolorOf args -> pcolorOf args model
-      PxcorOf args -> pxcorOf args model
-      PycorOf args -> pycorOf args model
-      PxycorOf args -> pxycorOf args model
-
-      LogPatch coors -> logPatch coors model
-
-      EmptyStack -> emptyStack model
-      PushToStack args -> pushToStack args model
-      PopOffStack args -> popOffStack args model
-      RepeatTopOfStack args -> repeatTopOfStack args model
-      SwapTopOfStack -> Stack.swap model
-      BringToTopOfStack args -> bringToTopOfStack args model
-
-      Add args -> add args model
-      Subtract args -> subtract args model
-      Multiply args -> multiply args model
-      Divide args -> divide args model
-      Increment args -> increment args model
-      Decrement args -> decrement args model
-
-      Equals args -> eq args model
-      NotEquals args -> notEq args model
-      MoreThan args -> moreThan args model
-      MoreThanOrEquals args -> moreThanOrEquals args model
-      LessThan args -> lessThan args model
-      LessThanOrEquals args -> lessThanOrEquals args model
-      TrueTest args -> true args model
-      FalseTest args -> false args model
-
-      CompileError messages -> compileError (["Error on line: " ++ toString lineNumber] ++ messages) model
-      Clear -> clearPatches model |> emptyStack
-      Still -> model
-      Failed -> runtimeError ["Failed."] model
-      _ -> compileError ["Command type not found"] model
 
 update : Action -> Model -> Model
 update action model = 

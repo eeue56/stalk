@@ -1,4 +1,4 @@
-module Stack where
+module Language.Stack where
 
 import Model exposing (..)
 import Parser exposing (..)

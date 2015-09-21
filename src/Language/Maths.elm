@@ -1,10 +1,10 @@
-module Maths where
+module Language.Maths where
 
 import Utils exposing (alwaysOkInt)
-import Stack exposing (pushToStack)
 import Model exposing (..)
 import Parser.Errors exposing (runtimeError)
 import Debug exposing (log)
+import Language.Stack as Stack
 
 add : Argument -> Model -> Model
 add numbers model =

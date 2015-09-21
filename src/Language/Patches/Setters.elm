@@ -1,4 +1,4 @@
-module Patches.Setters where
+module Language.Patches.Setters where
 
 import String
 import Debug exposing (log)
@@ -7,10 +7,11 @@ import Matrix exposing (Matrix)
 import Model exposing (..)
 import Utils exposing (..)
 import Parser.Errors exposing (runtimeError)
-import Stack
 
-import Patches.Utils exposing (..)
-import Patches.Encoding exposing (..)
+import Language.Stack as Stack
+
+import Language.Patches.Utils exposing (..)
+import Language.Patches.Encoding exposing (..)
 
 
 {-|

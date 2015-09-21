@@ -1,4 +1,4 @@
-module Patches.Utils where
+module Language.Patches.Utils where
 
 import String
 
