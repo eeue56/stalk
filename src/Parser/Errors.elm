@@ -20,11 +20,13 @@ compileError messages model =
 
 commandSuggestions : CommandLibrary -> String -> List String
 commandSuggestions dict command = 
-  List.map fst
-  <| List.take 5
-  <| List.sortBy (snd) 
-  <| List.filter (\(_,d) -> d < 3) 
-  <| List.map (\x -> (x, levenshtein command x)) (Dict.keys dict)
+  if String.trim command == "" then ["no command provided!"]
+  else
+    List.map fst
+    <| List.take 5
+    <| List.sortBy (snd) 
+    <| List.filter (\(_,d) -> d < 3) 
+    <| List.map (\x -> (x, levenshtein command x)) (Dict.keys dict)
 
 {-|
 add a command not found error to the error log
