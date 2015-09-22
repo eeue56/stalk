@@ -101,6 +101,20 @@ patch-at $ 5, 5
 apply $ set-pcolor-of $ 0, 175, 35
 ```
 
+
+You can use `filter` to filter the stack using an argument 
+The argument should be a function that returns True/False
+
+```
+
+push $ 5, 6, 8
+filter $ lt $ 7
+; stack will be 5, 7
+
+```
+
+
+
 ```
 
 push $ 255, 255, 0
