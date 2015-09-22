@@ -40,7 +40,7 @@ functionPartition args =
         y::ys -> (y ++ funcSplitter, ys)
     x::xs -> ("", args)
 
-
+-- apply's args should be a partial function taking one arg which pushes something to the stack
 apply : Argument -> Model -> Model
 apply args model = 
   let 
@@ -50,14 +50,15 @@ apply args model =
       in
         Parser.parse (func ++ (String.join " , " <| args' ++ [extraArgs])) model
   in
-  List.foldl (\extra model -> runCommand 0 (log "extra: " <| command extra) model) (Stack.emptyStack model) model.stack
+  List.foldr (\extra model -> runCommand 0 (log "extra: " <| command extra) model) (Stack.emptyStack model) model.stack
 
 
+-- filter's args should be a partial function taking one arg which pushes a bool onto the stack
 filter : Argument -> Model -> Model 
 filter args model = 
   let
     appliedModel = apply args model 
-    passed zipped = List.map (fst) <| List.filter (\(x, val) -> val /= "True") zipped
+    passed zipped = List.map (fst) <| List.filter (\(x, val) -> val == "True") zipped
   in
     case List.length (model.stack) == List.length appliedModel.stack of
       True -> 
@@ -66,6 +67,11 @@ filter args model =
           [] -> model
       False -> 
         runtimeError (["For some reason apply made a different sized stack, model stack:"] ++ model.stack ++ ["\napplied stack:"] ++ appliedModel.stack) model 
+
+-- reduce's args should be a function that takes two args and pushed one back on the stack
+-- TODO: implement
+reduce : Argument -> Model -> Model
+reduce args model = model
 
 runCommand : Int -> (Command, Int) -> Model -> Model
 runCommand lineNumber (command, stackUses) model' =
