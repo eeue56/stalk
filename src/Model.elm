@@ -14,6 +14,7 @@ type Action = Reset
 type Command = Clear 
   | Eval Argument
   | Apply Argument
+  | Filter Argument
 
   | SetPcolor Argument
   | SetPcolorOf Argument 

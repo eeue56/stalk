@@ -13,9 +13,11 @@ import Language.Cmp exposing (..)
 
 import Views exposing (..)
 import String
+import Debug exposing (log)
 
 import Parser exposing (..)
 import Parser.Errors exposing (compileError, runtimeError)
+import Parser.Symbols exposing (funcSplitter)
 
 
 {- 
@@ -29,8 +31,13 @@ import Parser.Errors exposing (compileError, runtimeError)
 functionPartition : Argument -> (String, Argument)
 functionPartition args = 
   case args of 
-    [] -> ("$", [])
-    x::[] -> (x ++ " $ ", [])
+    [] -> (funcSplitter, [])
+    -- when there's only one argument, we need to check if there's 
+    -- already a dollar involved
+    x::[] ->
+      case String.split funcSplitter x of
+        y::[] -> (x ++ " $ ", [])
+        y::ys -> (y ++ funcSplitter, ys)
     x::xs -> ("", args)
 
 
@@ -39,11 +46,26 @@ apply args model =
   let 
     command extraArgs = 
       let
-        (func, args') = functionPartition args
+        (func, args') = log "partition" <| functionPartition args
       in
         Parser.parse (func ++ (String.join " , " <| args' ++ [extraArgs])) model
   in
-  List.foldl (\extra model -> runCommand 0 (command extra) model) (Stack.emptyStack model) model.stack
+  List.foldl (\extra model -> runCommand 0 (log "extra: " <| command extra) model) (Stack.emptyStack model) model.stack
+
+
+filter : Argument -> Model -> Model 
+filter args model = 
+  let
+    appliedModel = apply args model 
+    passed zipped = List.map (fst) <| List.filter (\(x, val) -> val /= "True") zipped
+  in
+    case List.length (model.stack) == List.length appliedModel.stack of
+      True -> 
+        case List.map2 (,) model.stack appliedModel.stack of 
+          xs -> { model | stack <- passed xs }
+          [] -> model
+      False -> 
+        runtimeError (["For some reason apply made a different sized stack, model stack:"] ++ model.stack ++ ["\napplied stack:"] ++ appliedModel.stack) model 
 
 runCommand : Int -> (Command, Int) -> Model -> Model
 runCommand lineNumber (command, stackUses) model' =
@@ -53,6 +75,7 @@ runCommand lineNumber (command, stackUses) model' =
     case command of
       Eval args -> runCommand lineNumber (Parser.parse (String.join "," args) model) model
       Apply args -> apply args model 
+      Filter args -> filter args model
 
       SetPcolor color -> setPcolor color model
       SetPcolorOf args -> setPcolorOf args model

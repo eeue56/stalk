@@ -29,6 +29,7 @@ commands = Dict.fromList
    ("error", CompileError),
    ("eval", Eval),
    ("apply", Apply),
+   ("filter", Filter),
 
    -- stack operations
    ("empty-stack", always EmptyStack),
