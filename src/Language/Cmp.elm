@@ -53,4 +53,6 @@ true args model =
 
 false : Argument -> Model -> Model
 false args model = 
-  Stack.pushItem (not <| List.any (\x -> x == "True") args) model
+  case args of 
+    [] -> Stack.push ("False") model
+    xs -> Stack.pushItem (not <| List.any (\x -> x == "True") xs) model
