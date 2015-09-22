@@ -9,7 +9,8 @@ cmpEngine cmp args model =
   case args of 
     a::b::[] -> Stack.push (toString <| cmp a b) model
     a::b::xs -> runtimeError ["Too many arguments for cmp!"] model
-    _ -> runtimeError ["Not enough items in args for cmp!"] model
+    a::[] -> runtimeError ["Only one argument provided.."] model
+    [] -> runtimeError (["Not enough items in args for cmp!\nProvided:"] ++ args) model
     
 {-| 
 eq args and push result
