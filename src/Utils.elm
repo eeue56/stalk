@@ -84,3 +84,18 @@ levenshtein s1' s2' =
     step i acc = List.foldl (\j m -> Matrix.set i j (levInversion i j m) m) acc [1..l2]
   in
     unsafeGet l1 l2 (List.foldl step init [1..l1])
+
+
+takeN : Int -> List a -> Maybe (List (List a))
+takeN n xs = 
+  let 
+    len = List.length xs
+  in
+    
+    if len == 0 then Just []
+    else
+        if List.length xs < n then Nothing
+        else
+          case takeN n <| log "droped"  <| List.drop n xs of 
+            Nothing -> Nothing
+            Just zs -> Just <| (log "taking " <| List.take n xs) :: (log "zs" <| zs)

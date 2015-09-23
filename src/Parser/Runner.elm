@@ -14,6 +14,7 @@ import Language.Cmp exposing (..)
 import Views exposing (..)
 import String
 import Debug exposing (log)
+import Utils
 
 import Parser exposing (..)
 import Parser.Errors exposing (compileError, runtimeError)
@@ -71,7 +72,27 @@ filter args model =
 -- reduce's args should be a function that takes two args and pushed one back on the stack
 -- TODO: implement
 reduce : Argument -> Model -> Model
-reduce args model = model
+reduce args model = 
+  let 
+    (n, args') = 
+      case args of 
+        [] -> (0, [])
+        x::xs -> 
+          case String.toInt x of
+            Err _ -> (List.length model.stack, args)
+            Ok v -> (v, xs)
+
+    command extraArgs = 
+      let
+        (func, args'') = log "partition" <| functionPartition args'
+      in
+        Parser.parse (func ++ (String.join " , " <| args'' ++ extraArgs)) model
+  in
+    case Utils.takeN n <| List.reverse <| model.stack of 
+      Nothing -> runtimeError ["Uneven stack!"] model
+      Just groupedArgs -> 
+        List.foldr (\extra model -> runCommand 0 (log "extra: " <| command extra) model) (Stack.emptyStack model) groupedArgs
+
 
 runCommand : Int -> (Command, Int) -> Model -> Model
 runCommand lineNumber (command, stackUses) model' =
@@ -82,6 +103,7 @@ runCommand lineNumber (command, stackUses) model' =
       Eval args -> runCommand lineNumber (Parser.parse (String.join "," args) model) model
       Apply args -> apply args model 
       Filter args -> filter args model
+      Reduce args -> reduce args model
 
       SetPcolor color -> setPcolor color model
       SetPcolorOf args -> setPcolorOf args model
