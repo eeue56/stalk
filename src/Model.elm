@@ -15,7 +15,8 @@ type Command = Clear
   | Eval Argument
   | Apply Argument
   | Filter Argument
-  | Reduce Argument
+  | ReduceRight Argument
+  | ReduceLeft Argument
 
   | SetPcolor Argument
   | SetPcolorOf Argument 

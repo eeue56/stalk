@@ -30,7 +30,9 @@ commands = Dict.fromList
    ("eval", Eval),
    ("apply", Apply),
    ("filter", Filter),
-   ("reduce", Reduce),
+   ("reduce", ReduceRight),
+   ("reduce-right", ReduceRight),
+   ("reduce-left", ReduceLeft),
 
    -- stack operations
    ("empty-stack", always EmptyStack),

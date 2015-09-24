@@ -70,9 +70,10 @@ filter args model =
 
 -- reduce's args should be a function that takes two args and pushed one back on the stack
 -- TODO: implement
-reduce : Argument -> Model -> Model
-reduce args model = 
+reduce : Bool -> Argument -> Model -> Model
+reduce folder args model = 
   let 
+    folder' = if folder then List.foldr else List.foldl 
     (n, args') = 
       case args of 
         [] -> (0, [])
@@ -90,8 +91,13 @@ reduce args model =
     case Utils.takeN n <| List.reverse <| model.stack of 
       Nothing -> runtimeError ["Uneven stack!"] model
       Just groupedArgs -> 
-        List.foldr (\extra model -> runCommand 0 (log "extra: " <| command extra) model) (Stack.emptyStack model) groupedArgs
+        folder' (\extra model -> runCommand 0 (log "extra: " <| command extra) model) (Stack.emptyStack model) groupedArgs
 
+reduceRight : Argument -> Model -> Model
+reduceRight = reduce (True)
+
+reduceLeft : Argument -> Model -> Model
+reduceLeft = reduce (False)
 
 runCommand : Int -> (Command, Int) -> Model -> Model
 runCommand lineNumber (command, stackUses) model' =
@@ -102,7 +108,8 @@ runCommand lineNumber (command, stackUses) model' =
       Eval args -> runCommand lineNumber (Parser.parse (String.join "," args) model) model
       Apply args -> apply args model 
       Filter args -> filter args model
-      Reduce args -> reduce args model
+      ReduceRight args -> reduceRight args model
+      ReduceLeft args -> reduceLeft args model
 
       SetPcolor color -> setPcolor color model
       SetPcolorOf args -> setPcolorOf args model
