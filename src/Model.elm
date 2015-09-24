@@ -34,6 +34,7 @@ type Command = Clear
   | EmptyStack
   | PopOffStack Argument
   | PushToStack Argument
+  | ReversePushToStack Argument
   | RepeatTopOfStack Argument
   | BringToTopOfStack Argument
   | SwapTopOfStack

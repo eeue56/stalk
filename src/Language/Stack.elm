@@ -18,6 +18,10 @@ pushToStack : Argument -> Model -> Model
 pushToStack args model =
   { model | stack <- args ++ model.stack}
 
+pushReverseToStack : Argument -> Model -> Model
+pushReverseToStack args model =
+  { model | stack <- (List.reverse args) ++ model.stack}
+
 repeatTopOfStack : Argument -> Model -> Model
 repeatTopOfStack args model =
   case List.head args of 
