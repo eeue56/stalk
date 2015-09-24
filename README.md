@@ -1,4 +1,4 @@
-# elm-netlogo
+# stalk
 
 A whitespace-inspired Netlogo clone with functional features. Not designed to work nicely. If looking for a Netlogo-like turtle library, this is not the one you're after.
 
