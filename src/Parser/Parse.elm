@@ -40,7 +40,7 @@ returns true if the line starts with the @ symbol
 -}
 consumesWholeStack : String -> Bool
 consumesWholeStack line =
-  String.startsWith "@" line
+  String.startsWith Symbols.wholeStack line
 
 {-|
 the amount of stack operations
@@ -70,7 +70,9 @@ parseStacking line model isAll amountOfOps ops =
     args = 
           if (List.length model.stack) - amountOfOps < 0 then Nothing
           else Just <| log "erm" <| String.join Symbols.argSplitter <| List.take amountOfOps model.stack
-    joiner = if String.contains Symbols.funcSplitter tail then ", " else " $ "
+    joiner = 
+      if String.contains Symbols.funcSplitter tail then Symbols.argSplitter ++ " " 
+      else (" " ++ Symbols.funcSplitter ++ " ") 
   in
     case args of 
       Just v -> 

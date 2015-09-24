@@ -5,6 +5,7 @@ comment = ";"
 
 stackUse = ">"
 stackPop = "#"
+wholeStack = "@"
 
 argSplitter = ","
 funcSplitter = "$"
