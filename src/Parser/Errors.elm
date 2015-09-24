@@ -4,6 +4,7 @@ import String
 import Dict
 import Model exposing (..)
 import Utils exposing (levenshtein)
+import Parser.Symbols as Symbols
 
 {-|
 TODO: seperate runtimeErrors from compiletime errors
@@ -35,7 +36,7 @@ commandNotFound : CommandLibrary -> String -> Command
 commandNotFound dict command  =
   let
     helpWarning = 
-      if (List.length <| String.split " " command) > 2 then "\nMaybe you forgot a $?"
+      if (List.length <| String.split " " command) > 2 then ("\nMaybe you forgot a " ++ Symbols.funcSplitter ++ "?")
       else 
         let
           suggestions = commandSuggestions dict command

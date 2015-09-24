@@ -96,6 +96,6 @@ takeN n xs =
     else
         if List.length xs < n then Nothing
         else
-          case takeN n <| log "droped"  <| List.drop n xs of 
+          case takeN n <| List.drop n xs of 
             Nothing -> Nothing
-            Just zs -> Just <| (log "taking " <| List.take n xs) :: (log "zs" <| zs)
+            Just zs -> Just <| (List.take n xs) :: (zs)

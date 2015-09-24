@@ -11,7 +11,6 @@ import Language.Stack exposing (..)
 import Language.Maths exposing (..)
 import Language.Cmp exposing (..)
 
-import Views exposing (..)
 import String
 import Debug exposing (log)
 import Utils
@@ -37,7 +36,7 @@ functionPartition args =
     -- already a dollar involved
     x::[] ->
       case String.split funcSplitter x of
-        y::[] -> (x ++ " $ ", [])
+        y::[] -> (x ++ (" " ++ funcSplitter ++ " "), [])
         y::ys -> (y ++ funcSplitter, ys)
     x::xs -> ("", args)
 
