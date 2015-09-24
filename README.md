@@ -113,6 +113,20 @@ filter $ lt $ 7
 
 ```
 
+You can use `reduce` to foldl over a stack.
+`reduce` takes an optional argument of a number, for grouping stack items together
+
+```
+push $ 1, 2, 3
+reduce $ add
+; stack is 6
+
+#@ pop
+
+push $ 5, 5, 1, 11
+reduce $ 2, add
+;; stack is 12, 10
+```
 
 
 ```
