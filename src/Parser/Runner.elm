@@ -41,23 +41,32 @@ functionPartition args =
     x::xs -> ("", args)
 
 -- apply's args should be a partial function taking one arg which pushes something to the stack
-apply : Argument -> Model -> Model
-apply args model = 
+apply : Bool ->  Argument -> Model -> Model
+apply folder args model = 
   let 
+    folder' =  if folder then List.foldr else List.foldl 
     command extraArgs = 
       let
         (func, args') = log "partition" <| functionPartition args
       in
         Parser.parse (func ++ (String.join " , " <| args' ++ [extraArgs])) model
   in
-  List.foldr (\extra model -> runCommand 0 (log "extra: " <| command extra) model) (Stack.emptyStack model) model.stack
+    folder' (\extra model -> runCommand 0 (log "extra: " <| command extra) model) (Stack.emptyStack model) model.stack
+
+applyRight : Argument -> Model -> Model
+applyRight = apply True
+
+-- TODO:
+-- identify WTF bug that happens if set applyLeft to partially applied func
+applyLeft : Argument -> Model -> Model 
+applyLeft args model = apply False args model
 
 
 -- filter's args should be a partial function taking one arg which pushes a bool onto the stack
 filter : Argument -> Model -> Model 
 filter args model = 
   let
-    appliedModel = apply args model 
+    appliedModel = applyRight args model 
     passed zipped = List.map (fst) <| List.filter (\(x, val) -> val == "True") zipped
   in
     case List.length (model.stack) == List.length appliedModel.stack of
@@ -106,7 +115,8 @@ runCommand lineNumber (command, stackUses) model' =
   in
     case command of
       Eval args -> runCommand lineNumber (Parser.parse (String.join "," args) model) model
-      Apply args -> apply args model 
+      ApplyRight args -> applyRight args model 
+      ApplyLeft args -> applyLeft args model
       Filter args -> filter args model
       ReduceRight args -> reduceRight args model
       ReduceLeft args -> reduceLeft args model

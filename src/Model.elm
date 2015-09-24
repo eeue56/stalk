@@ -13,8 +13,9 @@ type Action = Reset
 
 type Command = Clear 
   | Eval Argument
-  | Apply Argument
   | Filter Argument
+  | ApplyLeft Argument
+  | ApplyRight Argument
   | ReduceRight Argument
   | ReduceLeft Argument
 
