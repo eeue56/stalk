@@ -155,3 +155,21 @@ drop args model =
             dropStack name model |> emptyStack
           else
             dropStack name model
+
+
+pushToShelfStack : Argument -> Model -> Model
+pushToShelfStack args model = 
+  case args of 
+    [] -> runtimeError ["Not enough args for push!"] model
+    x::[] -> runtimeError ["Not enough args for push!"] model
+    x::xs ->
+      let
+        name = String.trim x
+      in
+        case Dict.get name model.stackShelf of 
+          Nothing -> runtimeError ["Stack not found with the name " ++ name] model
+          Just stack ->
+            let 
+              updatedStack = xs ++ stack
+            in
+              { model | stackShelf <- Dict.insert name updatedStack model.stackShelf }

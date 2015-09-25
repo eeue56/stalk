@@ -33,6 +33,7 @@ type Command = Clear
 
   | UseStack Argument
   | DropStack Argument
+  | PushToShelfStack Argument
   | EmptyStack
   | PopOffStack Argument
   | PushToStack Argument

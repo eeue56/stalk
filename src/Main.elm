@@ -39,6 +39,7 @@ commands = Dict.fromList
    -- stack operations
    ("use", UseStack),
    ("drop", DropStack),
+   ("push-to", PushToShelfStack),
    ("empty-stack", always EmptyStack),
    ("push", PushToStack),
    ("pushr", ReversePushToStack),
