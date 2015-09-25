@@ -3,6 +3,7 @@ module Language.Stack where
 import Model exposing (..)
 import Parser exposing (..)
 import String exposing (toInt)
+import Dict
 
 import Parser.Errors exposing (compileError, runtimeError)
 
@@ -96,3 +97,43 @@ swap model =
           Just y -> { model | stack <- [y, x] ++ List.drop 2 model.stack }
           Nothing -> notEnough
         Nothing -> notEnough
+
+storeStack : String -> List String -> Model -> Model
+storeStack name stack model =
+  { model | stackShelf <- Dict.insert name stack model.stackShelf }
+
+storeCurrentStack : Model -> Model
+storeCurrentStack model =
+  storeStack model.stackName model.stack model 
+
+getStack : String -> Model -> Maybe (List String)
+getStack name model =
+  Dict.get name model.stackShelf
+
+loadStack : String -> Model -> Model
+loadStack name model =
+  case getStack name model of 
+    Just v -> { model | stack <- v, stackName <- name }
+    Nothing -> { model | stack <- [], stackName <- name }
+
+-- use sets the current stack
+-- if no args, defaults to global
+-- if 1 or more, take first arg as name of stack
+-- if stack doesn't exist, create it
+-- if it does, and the name is differnet to current stack name,
+-- then store current stack and load new one
+-- otherwise reload stack from shelf
+use : Argument -> Model -> Model 
+use args model =
+    case args of 
+      [] -> use ["global"] model
+      x::_ -> 
+        let 
+          newName = String.trim x
+          currentName = model.stackName
+        in
+          if newName == currentName then
+            loadStack newName model
+          else
+            storeCurrentStack model 
+              |> loadStack newName 

@@ -31,6 +31,7 @@ type Command = Clear
   | PatchAt Argument
   | NeighboursOf Argument
 
+  | UseStack Argument
   | EmptyStack
   | PopOffStack Argument
   | PushToStack Argument
@@ -81,6 +82,8 @@ type alias Model = {
   height : Int,
 
   stack : List String,
+  stackName : String,
+  stackShelf : Dict.Dict String (List String),
 
 
   patchSize : Float }

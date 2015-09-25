@@ -37,6 +37,7 @@ commands = Dict.fromList
    ("reduce-left", ReduceLeft),
 
    -- stack operations
+   ("use", UseStack),
    ("empty-stack", always EmptyStack),
    ("push", PushToStack),
    ("pushr", ReversePushToStack),
@@ -115,6 +116,8 @@ model' = {
   width = 750,
   height = 750,
   stack = [],
+  stackName = "global",
+  stackShelf = Dict.empty,
   patchSize =  750 / 25 }
 
 enteredCommands : Signal.Mailbox Action

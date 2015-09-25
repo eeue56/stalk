@@ -128,6 +128,26 @@ reduce $ 2, add
 ;; stack is 12, 10
 ```
 
+There can be mutliple stacks in Stalk, controlled through `use`. This can be handy for providing context. If you're familiar with OpenGL, consider it similar to push/pop matrix.
+
+```
+
+use $ phones
+; stack is []
+push $ 3, 1, 0, 1
+; stack is [3, 1, 0, 1]
+use $ ages
+; stack is []
+push $ 16, 22, 55, 32
+; stack is [16, 22, 55, 32]
+#@ add
+; stack is [125]
+use $ phones
+; stack is [3, 1, 0, 1]
+filter $ mt 2
+; stack is [1, 0, 1]
+```
+
 
 ```
 
