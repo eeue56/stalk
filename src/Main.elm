@@ -40,6 +40,7 @@ commands = Dict.fromList
    ("use", UseStack),
    ("drop", DropStack),
    ("push-to", PushToShelfStack),
+   ("store-stack", always StoreStack),
    ("empty-stack", always EmptyStack),
    ("push", PushToStack),
    ("pushr", ReversePushToStack),

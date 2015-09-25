@@ -136,6 +136,7 @@ runCommand lineNumber (command, stackUses) model' =
       UseStack args -> Stack.use args model
       DropStack args -> Stack.drop args model
       PushToShelfStack args -> Stack.pushToShelfStack args model
+      StoreStack -> Stack.storeCurrentStack model
       EmptyStack -> emptyStack model
       PushToStack args -> pushToStack args model
       ReversePushToStack args -> pushReverseToStack args model

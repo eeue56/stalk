@@ -34,6 +34,7 @@ type Command = Clear
   | UseStack Argument
   | DropStack Argument
   | PushToShelfStack Argument
+  | StoreStack
   | EmptyStack
   | PopOffStack Argument
   | PushToStack Argument
