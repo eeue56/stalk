@@ -116,6 +116,10 @@ loadStack name model =
     Just v -> { model | stack <- v, stackName <- name }
     Nothing -> { model | stack <- [], stackName <- name }
 
+dropStack : String -> Model -> Model 
+dropStack name model =
+  { model | stackShelf <- Dict.remove name model.stackShelf }
+
 -- use sets the current stack
 -- if no args, defaults to global
 -- if 1 or more, take first arg as name of stack
@@ -137,3 +141,17 @@ use args model =
           else
             storeCurrentStack model 
               |> loadStack newName 
+
+drop : Argument -> Model -> Model 
+drop args model =
+    case args of 
+      [] -> { model | stackShelf <- Dict.empty, stack <- [], stackName <- "global" }
+      x::_ -> 
+        let 
+          name = String.trim x
+          currentName = model.stackName
+        in
+          if name == currentName then
+            dropStack name model |> emptyStack
+          else
+            dropStack name model

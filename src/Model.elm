@@ -32,6 +32,7 @@ type Command = Clear
   | NeighboursOf Argument
 
   | UseStack Argument
+  | DropStack Argument
   | EmptyStack
   | PopOffStack Argument
   | PushToStack Argument
