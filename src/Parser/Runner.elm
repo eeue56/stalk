@@ -162,7 +162,7 @@ runCommand lineNumber (command, stackUses) model' =
       FalseTest args -> false args model
 
       CompileError messages -> compileError (["Error on line: " ++ toString lineNumber] ++ messages) model
-      Clear -> clearPatches model |> emptyStack
+      Clear -> clearPatches model |> emptyStack |> dropAllStacks
       Still -> model
       Failed -> runtimeError ["Failed."] model
       _ -> compileError ["Command type not found"] model

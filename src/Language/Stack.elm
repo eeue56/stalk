@@ -120,6 +120,10 @@ dropStack : String -> Model -> Model
 dropStack name model =
   { model | stackShelf <- Dict.remove name model.stackShelf }
 
+dropAllStacks : Model -> Model
+dropAllStacks model = 
+  { model | stackShelf <- Dict.empty }
+
 -- use sets the current stack
 -- if no args, defaults to global
 -- if 1 or more, take first arg as name of stack
