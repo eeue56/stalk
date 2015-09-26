@@ -166,3 +166,12 @@ runCommand lineNumber (command, stackUses) model' =
       Still -> model
       Failed -> runtimeError ["Failed."] model
       _ -> compileError ["Command type not found"] model
+    
+programRunner : String -> Model -> Model
+programRunner enteredText model =      
+  let
+    model' = { model | errorMessage <- "" }
+    commands = List.indexedMap (,) <| List.filter (not << String.isEmpty) <| String.lines enteredText 
+  in
+    List.foldl (\(lineNumber, command) model'' -> runCommand lineNumber (parse command model'') model'') model' commands
+ 

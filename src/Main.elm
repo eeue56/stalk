@@ -101,12 +101,7 @@ update : Action -> Model -> Model
 update action model = 
   case action of 
     UpdateText x -> { model | enteredText <- x } 
-    Enter -> 
-      let
-        model' = { model | errorMessage <- "" }
-        commands = List.indexedMap (,) <| List.filter (not << String.isEmpty) <| String.lines model'.enteredText 
-      in
-        List.foldl (\(lineNumber, command) model'' -> runCommand lineNumber (parse command model'') model'') model' commands
+    Enter -> programRunner model.enteredText model
     Reset -> runCommand 0 (Clear, 0) model
     Noop -> model
 
