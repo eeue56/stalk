@@ -11,6 +11,8 @@ import Language.Stack exposing (..)
 import Language.Maths exposing (..)
 import Language.Cmp exposing (..)
 
+import Language.Functional exposing (..)
+
 import String
 import Debug exposing (log)
 import Utils
@@ -18,108 +20,21 @@ import Utils
 import Parser exposing (..)
 import Parser.Errors exposing (compileError, runtimeError)
 import Parser.Symbols exposing (funcSplitter)
+import Parser.Models exposing (Runner)
 
 
-{- 
-  When no args, there should be a dollar, empty list
-  When the args is just the function name (len args == 1) then it should the func name + dollar, empty list
-  Otherwise, there should be an empty string, the args
-  
-  This assumes that more than one args means that a paritial function has been provided,
-  meaning that there's no need for a dollar
-  -}
-functionPartition : Argument -> (String, Argument)
-functionPartition args = 
-  case args of 
-    [] -> (funcSplitter, [])
-    -- when there's only one argument, we need to check if there's 
-    -- already a dollar involved
-    x::[] ->
-      case String.split funcSplitter x of
-        y::[] -> (x ++ (" " ++ funcSplitter ++ " "), [])
-        y::ys -> (y ++ funcSplitter, ys)
-    x::xs -> ("", args)
-
--- apply's args should be a partial function taking one arg which pushes something to the stack
-apply : Bool ->  Argument -> Model -> Model
-apply folder args model = 
-  let 
-    folder' =  if folder then List.foldr else List.foldl 
-    command extraArgs = 
-      let
-        (func, args') = log "partition" <| functionPartition args
-      in
-        Parser.parse (func ++ (String.join " , " <| args' ++ [extraArgs])) model
-  in
-    folder' (\extra model -> runCommand 0 (log "extra: " <| command extra) model) (Stack.emptyStack model) model.stack
-
-applyRight : Argument -> Model -> Model
-applyRight = apply True
-
--- TODO:
--- identify WTF bug that happens if set applyLeft to partially applied func
-applyLeft : Argument -> Model -> Model 
-applyLeft args model = apply False args model
-
-
--- filter's args should be a partial function taking one arg which pushes a bool onto the stack
-filter : Argument -> Model -> Model 
-filter args model = 
-  let
-    appliedModel = applyRight args model 
-    passed zipped = List.map (fst) <| List.filter (\(x, val) -> val == "True") zipped
-  in
-    case List.length (model.stack) == List.length appliedModel.stack of
-      True -> 
-        case List.map2 (,) model.stack appliedModel.stack of 
-          xs -> { model | stack <- passed xs }
-          [] -> model
-      False -> 
-        runtimeError (["For some reason apply made a different sized stack, model stack:"] ++ model.stack ++ ["\napplied stack:"] ++ appliedModel.stack) model 
-
--- reduce's args should be a function that takes two args and pushed one back on the stack
--- TODO: implement
-reduce : Bool -> Argument -> Model -> Model
-reduce folder args model = 
-  let 
-    folder' = if folder then List.foldr else List.foldl 
-    (n, args') = 
-      case args of 
-        [] -> (0, [])
-        x::xs -> 
-          case String.toInt x of
-            Err _ -> (List.length model.stack, args)
-            Ok v -> (v, xs)
-
-    command extraArgs = 
-      let
-        (func, args'') = log "partition" <| functionPartition args'
-      in
-        Parser.parse (func ++ (String.join " , " <| args'' ++ extraArgs)) model
-  in
-    case Utils.takeN n <| List.reverse <| model.stack of 
-      Nothing -> runtimeError ["Uneven stack!"] model
-      Just groupedArgs -> 
-        folder' (\extra model -> runCommand 0 (log "extra: " <| command extra) model) (Stack.emptyStack model) groupedArgs
-
-reduceRight : Argument -> Model -> Model
-reduceRight = reduce (True)
-
-reduceLeft : Argument -> Model -> Model
-reduceLeft = reduce (False)
-
-runCommand : Int -> (Command, Int) -> Model -> Model
+runCommand : Runner
 runCommand lineNumber (command, stackUses) model' =
   let
     model = { model' | stack <- List.drop stackUses model'.stack }
   in
     case command of
       Eval args -> runCommand lineNumber (Parser.parse (String.join "," args) model) model
-      ApplyRight args -> applyRight args model 
-      ApplyLeft args -> applyLeft args model
-      Filter args -> filter args model
-      ReduceRight args -> reduceRight args model
-      ReduceLeft args -> reduceLeft args model
+      ApplyRight args -> applyRight (runCommand) args model 
+      ApplyLeft args -> applyLeft (runCommand) args model
+      Filter args -> filter (runCommand) args model
+      ReduceRight args -> reduceRight (runCommand) args model
+      ReduceLeft args -> reduceLeft (runCommand) args model
 
       SetPcolor color -> setPcolor color model
       SetPcolorOf args -> setPcolorOf args model
