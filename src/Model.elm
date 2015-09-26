@@ -18,6 +18,7 @@ type Command = Clear
   | ApplyRight Argument
   | ReduceRight Argument
   | ReduceLeft Argument
+  | Label Argument
 
   | SetPcolor Argument
   | SetPcolorOf Argument 

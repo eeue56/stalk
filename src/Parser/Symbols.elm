@@ -9,3 +9,5 @@ wholeStack = "@"
 
 argSplitter = ","
 funcSplitter = "$"
+
+label = ":"
