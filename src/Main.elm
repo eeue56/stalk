@@ -27,21 +27,27 @@ commands = Dict.fromList
    ("still", always Still),
    ("failed", always Failed),
    ("error", CompileError),
+
    ("eval", Eval),
+   
    ("apply", ApplyRight),
    ("apply-right", ApplyRight),
    ("apply-left", ApplyLeft),
+
    ("filter", Filter),
+
    ("reduce", ReduceRight),
    ("reduce-right", ReduceRight),
    ("reduce-left", ReduceLeft),
 
-   -- stack operations
+   -- stack-shelf operations
    ("use", UseStack),
    ("drop", DropStack),
+   ("drop-all", always DropShelf),
    ("push-to", PushToShelfStack),
    ("store-stack", always StoreStack),
    ("empty-stack", always EmptyStack),
+   -- current stack operations
    ("push", PushToStack),
    ("pushr", ReversePushToStack),
    ("pop", PopOffStack),

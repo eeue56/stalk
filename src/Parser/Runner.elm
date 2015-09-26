@@ -138,6 +138,8 @@ runCommand lineNumber (command, stackUses) model' =
       PushToShelfStack args -> Stack.pushToShelfStack args model
       StoreStack -> Stack.storeCurrentStack model
       EmptyStack -> emptyStack model
+      DropShelf -> Stack.dropAllStacks model
+
       PushToStack args -> pushToStack args model
       ReversePushToStack args -> pushReverseToStack args model
       PopOffStack args -> popOffStack args model
