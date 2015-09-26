@@ -148,6 +148,23 @@ filter $ mt 2
 ; stack is [1, 0, 1]
 ```
 
+```
+clear
+
+use $ colors
+push $ 255, 0, 0
+
+use $ points
+push $ 5, 3
+## patch-at 
+# neighbours-of
+
+use $ colors
+### push-to $ points
+
+use $ points
+### apply $ set-pcolor-of $
+```
 
 ```
 
