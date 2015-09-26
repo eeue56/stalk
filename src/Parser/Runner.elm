@@ -146,6 +146,7 @@ runCommand lineNumber (command, stackUses) model' =
       RepeatTopOfStack args -> repeatTopOfStack args model
       SwapTopOfStack -> Stack.swap model
       BringToTopOfStack args -> bringToTopOfStack args model
+      ReverseStack -> emptyStack model |> pushReverseToStack model.stack
 
       Add args -> add args model
       Subtract args -> subtract args model

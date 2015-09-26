@@ -54,6 +54,7 @@ commands = Dict.fromList
    ("repeat", RepeatTopOfStack),
    ("swap", always SwapTopOfStack),
    ("top", BringToTopOfStack),
+   ("reverse", always ReverseStack),
 
    -- setters to do with patches
    ("set-pcolor", SetPcolor),
