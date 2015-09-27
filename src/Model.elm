@@ -78,8 +78,6 @@ type alias Patch = {
 type alias CommandPanel = (String, Command)
 
 type alias Model = {
-  enteredText : String,
-
   errorMessage : String,
 
   patches : Matrix Patch,
@@ -92,5 +90,11 @@ type alias Model = {
   stackName : String,
   stackShelf : Dict.Dict String (List String),
 
-
   patchSize : Float }
+
+
+type alias Program = {
+  enteredText : String,
+  model: Model,
+  steps: Int
+}

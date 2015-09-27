@@ -10,8 +10,8 @@ import String
 import Model exposing (..)
 import Drawing exposing (..)
 
-drawWorld model =
-  draw model
+drawWorld program =
+  draw program
 
 is13 : Int -> Result String ()
 is13 code =
@@ -23,19 +23,19 @@ onEnter address value =
       (Json.customDecoder keyCode is13)
       (\_ -> Signal.message address value)
 
-errorArea : Model -> Html
-errorArea model =
+errorArea : Program -> Html
+errorArea program =
   textarea [ 
-    value <| String.trim model.errorMessage, 
-    hidden <| String.trim model.errorMessage == "",
+    value <| String.trim program.model.errorMessage, 
+    hidden <| String.trim program.model.errorMessage == "",
     style 
       [ ("height", "250px"), 
         ("width", "500px")
       ]
     ] []
 
-commandsTextarea : Signal.Address Action -> Model -> Html
-commandsTextarea address model = 
+commandsTextarea : Signal.Address Action -> Program -> Html
+commandsTextarea address program = 
   div [ style [ ("width", "100%")]] 
     [
       textarea 
@@ -44,21 +44,21 @@ commandsTextarea address model =
           on "input" targetValue (Signal.message address << UpdateText),
           style 
             [ ("height", "250px"), 
-              ("width", (toString model.width) ++ "px")
+              ("width", (toString program.model.width) ++ "px")
             ]
         ] [],
       button [ onClick address Enter ] [ text "Run program" ],
       button [ onClick address Reset ] [ text "Reset" ],
-      button [ onClick address Step ] [ text "Step through" ],
-      errorArea model
+      button [ onClick address Step ] [ text <| "Step through: " ++ (toString program.steps) ],
+      errorArea program
     ]    
 
-view address model =
+view address program =
   div [] [
     div [ ] 
       [
-        commandsTextarea address model
+        commandsTextarea address program
       ],
-    fromElement <| drawWorld model,
-    text <| toString model.stack
+    fromElement <| drawWorld program,
+    text <| toString program.model.stack
   ]

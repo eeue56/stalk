@@ -34,6 +34,6 @@ background width height =
     |> filled black
 
 
-draw model = 
-  collage model.width model.height
-    <| (background model.width model.height) :: (drawArray model)
+draw program = 
+  collage program.model.width program.model.height
+    <| (background program.model.width program.model.height) :: (drawArray program.model)

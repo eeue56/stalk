@@ -101,25 +101,24 @@ commands = Dict.fromList
 
   ]
 
-update : Action -> Model -> Model
-update action model = 
+update : Action -> Program -> Program
+update action program = 
   case action of 
-    UpdateText x -> { model | enteredText <- x } 
-    Enter -> programRunner model.enteredText model
-    Reset -> runCommand 0 (Clear, 0) model
+    UpdateText x -> { program | enteredText <- x, steps <- 0 } 
+    Enter -> { program | model <- programRunner program.enteredText program.model }
+    Reset -> { program | model <- runCommand 0 (Clear, 0) program.model, steps <- 0 }
     Step ->
-      case String.split "\n" model.enteredText of
-        [] -> model
+      case String.split "\n" program.enteredText of
+        [] -> program
         x::xs ->
           let 
-            model' = programRunner x model
+            program' = { program | model <- programRunner x program.model }
           in 
-            { model' | enteredText <- String.join "\n" xs }
-    Noop -> model
+            { program' | enteredText <- String.join "\n" xs, steps <- program'.steps + 1 }
+    Noop -> program
 
-model' : Model
-model' = {
-  enteredText = "",
+model : Model
+model = {
   errorMessage = "",
   patches = defaultPatches 25 25,
   commands = commands,
@@ -130,12 +129,19 @@ model' = {
   stackShelf = Dict.empty,
   patchSize =  750 / 25 }
 
+program' : Program
+program' = {
+  enteredText = "",
+  model = model,
+  steps = 0 }
+  
+
 enteredCommands : Signal.Mailbox Action
 enteredCommands = Signal.mailbox Noop
 
-model = Signal.foldp
+program = Signal.foldp
   update
-  model'
+  program'
   enteredCommands.signal
 
-main = Signal.map (view enteredCommands.address) model
+main = Signal.map (view enteredCommands.address) program
