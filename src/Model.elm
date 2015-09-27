@@ -9,6 +9,7 @@ type alias Argument = List String
 type Action = Reset
   | Enter
   | UpdateText String
+  | Step
   | Noop
 
 type Command = Clear 

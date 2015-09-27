@@ -107,6 +107,14 @@ update action model =
     UpdateText x -> { model | enteredText <- x } 
     Enter -> programRunner model.enteredText model
     Reset -> runCommand 0 (Clear, 0) model
+    Step ->
+      case String.split "\n" model.enteredText of
+        [] -> model
+        x::xs ->
+          let 
+            model' = programRunner x model
+          in 
+            { model' | enteredText <- String.join "\n" xs }
     Noop -> model
 
 model' : Model

@@ -49,6 +49,7 @@ commandsTextarea address model =
         ] [],
       button [ onClick address Enter ] [ text "Run program" ],
       button [ onClick address Reset ] [ text "Reset" ],
+      button [ onClick address Step ] [ text "Step through" ],
       errorArea model
     ]    
 
