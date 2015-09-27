@@ -25,14 +25,17 @@ onEnter address value =
 
 errorArea : Program -> Html
 errorArea program =
-  textarea [ 
-    value <| String.trim program.model.errorMessage, 
-    hidden <| String.trim program.model.errorMessage == "",
-    style 
-      [ ("height", "250px"), 
-        ("width", "500px")
-      ]
-    ] []
+  let 
+    stripedMessage = String.trim program.model.errorMessage
+  in
+    textarea [ 
+      value <| stripedMessage, 
+      hidden <| stripedMessage == "",
+      style 
+        [ ("height", "250px"), 
+          ("width", "500px")
+        ]
+      ] []
 
 commandsTextarea : Signal.Address Action -> Program -> Html
 commandsTextarea address program = 
