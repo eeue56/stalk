@@ -7,6 +7,10 @@ import Matrix
 import Array
 import Convert
 
+{-|
+  Only use if you can be sure that the data you're getting it an int
+  Returns 0 if fails to convert from a string
+-}
 alwaysOkInt : String -> Int
 alwaysOkInt v = 
   case String.toInt v of 
@@ -42,7 +46,9 @@ serializeRecord record =
   in
     record'
 
-
+{-|
+  returns levenshtein distance between two strings
+-}
 levenshtein : String -> String -> Int
 levenshtein s1' s2' =
   let
@@ -85,7 +91,22 @@ levenshtein s1' s2' =
   in
     unsafeGet l1 l2 (List.foldl step init [1..l1])
 
+{-|
+  Group lists into a list of size n
+  Returns Nothing if unable to create a sublist of size n
 
+  E.g -
+    ```elm
+      takeN 2 [1, 2, 3, 4]
+      Just [[1, 2], [3, 4]]
+
+      takeN 2 [1, 2, 3]
+      Nothing
+
+      takeN 3 [1, 2, 3]
+      Just [[1, 2, 3]]
+    ```
+-}
 takeN : Int -> List a -> Maybe (List (List a))
 takeN n xs = 
   let 

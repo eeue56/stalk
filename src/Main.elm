@@ -6,21 +6,18 @@ import Debug exposing (log)
 
 import Model exposing (..)
 
-import Language.Patches exposing (..)
-import Language.Patches.Getters exposing (..)
-import Language.Patches.Setters exposing (..)
-
-import Language.Stack exposing (..)
-import Language.Maths exposing (..)
-import Language.Cmp exposing (..)
+import Language.Patches exposing (defaultPatches)
+import Parser.Errors exposing (compileError, runtimeError)
+import Parser.Runner exposing (programRunner, runCommand)
 
 import Views exposing (..)
 
-import Parser exposing (..)
-import Parser.Errors exposing (compileError, runtimeError)
-import Parser.Runner exposing (..)
-
-
+{-|
+  The command library is where we register Stalk commands
+  Sometimes they're just aliases for exisiting commands
+  We will allow things to be added to the command library at compile 
+  and runtime in the future.
+-}
 commands : CommandLibrary
 commands = Dict.fromList
   [("clear", always Clear),
