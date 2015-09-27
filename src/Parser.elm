@@ -28,7 +28,7 @@ parse : String -> Model -> (Command, Int)
 parse line model =
   if isComment line then (Still, 0)
   else
-    if isLabel line then (Label [line], 0)
+    if isLabel line then (Label [String.dropLeft 1 line], 0)
     else
       if not <| isStackOp line then (findCommand line model.commands, 0)
       else 

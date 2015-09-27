@@ -19,7 +19,9 @@ type Command = Clear
   | ApplyRight Argument
   | ReduceRight Argument
   | ReduceLeft Argument
+
   | Label Argument
+  | Jump Argument
 
   | SetPcolor Argument
   | SetPcolorOf Argument 
@@ -85,6 +87,8 @@ type alias Model = {
   
   width : Int,
   height : Int,
+
+  labels : Dict.Dict String Int,
 
   stack : List String,
   stackName : String,

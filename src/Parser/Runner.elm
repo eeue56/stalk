@@ -10,6 +10,7 @@ import Language.Stack as Stack
 import Language.Stack exposing (..)
 import Language.Maths exposing (..)
 import Language.Cmp exposing (..)
+import Language.Flow exposing (..)
 
 import Language.Functional exposing (..)
 
@@ -78,6 +79,9 @@ runCommand lineNumber (command, stackUses) model' =
       LessThanOrEquals args -> lessThanOrEquals args model
       TrueTest args -> true args model
       FalseTest args -> false args model
+
+      Label args -> addLabel args lineNumber model
+      Jump args -> jumpTo args model
 
       CompileError messages -> compileError (["Error on line: " ++ toString lineNumber] ++ messages) model
       Clear -> clearPatches model |> emptyStack |> dropAllStacks

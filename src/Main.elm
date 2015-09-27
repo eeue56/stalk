@@ -25,6 +25,9 @@ commands = Dict.fromList
    ("failed", always Failed),
    ("error", CompileError),
 
+   ("label", Label),
+   ("jump", Jump),
+
    ("eval", Eval),
    
    ("apply", ApplyRight),
@@ -122,6 +125,7 @@ model = {
   errorMessage = "",
   patches = defaultPatches 25 25,
   commands = commands,
+  labels = Dict.empty,
   width = 750,
   height = 750,
   stack = [],
