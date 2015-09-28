@@ -25,6 +25,9 @@ The stack is string-only. In fact, everything is a string, much like tcl. Functi
 
 ## Syntax
 
+Stalk uses a command-based syntax with inspiration from other languages like J or Forth.
+Some operators work by changing the context of a line
+
 `TODO: improve this`
 
 ### Comments
