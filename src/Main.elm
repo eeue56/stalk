@@ -71,6 +71,8 @@ commands = Dict.fromList
    -- patch loggers
    ("log-patch", LogPatch),
 
+   ("spawn", Spawn),
+
    -- math operations
    ("add", Add),
    ("+", Add),
@@ -124,6 +126,7 @@ model : Model
 model = {
   errorMessage = "",
   patches = defaultPatches 25 25,
+  turtles = [],
   commands = commands,
   labels = Dict.empty,
   width = 750,

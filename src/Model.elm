@@ -32,6 +32,8 @@ type Command = Clear
 
   | LogPatch Argument
 
+  | Spawn Argument
+
   | PatchAt Argument
   | NeighboursOf Argument
 
@@ -77,12 +79,20 @@ type alias Patch = {
   pycor : Int
 }
 
+type alias Turtle = {
+  color : Color,
+  xcor : Int,
+  ycor : Int
+}
+
 type alias CommandPanel = (String, Command)
 
 type alias Model = {
   errorMessage : String,
 
   patches : Matrix Patch,
+  turtles : List Turtle,
+
   commands : CommandLibrary,
   
   width : Int,

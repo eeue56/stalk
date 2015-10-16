@@ -6,6 +6,8 @@ import Language.Patches exposing (..)
 import Language.Patches.Getters exposing (..)
 import Language.Patches.Setters exposing (..)
 
+import Language.Turtles.Setters exposing (..)
+
 import Language.Stack as Stack
 import Language.Stack exposing (..)
 import Language.Maths exposing (..)
@@ -48,6 +50,8 @@ runCommand lineNumber (command, stackUses) model' =
       PxycorOf args -> pxycorOf args model
 
       LogPatch coors -> logPatch coors model
+
+      Spawn args -> spawn args model
 
       UseStack args -> Stack.use args model
       DropStack args -> Stack.drop args model
