@@ -33,6 +33,7 @@ type Command = Clear
   | LogPatch Argument
 
   | Spawn Argument
+  | TurtleOn Argument
 
   | PatchAt Argument
   | NeighboursOf Argument
@@ -82,7 +83,8 @@ type alias Patch = {
 type alias Turtle = {
   color : Color,
   xcor : Int,
-  ycor : Int
+  ycor : Int,
+  facing : Maybe Patch
 }
 
 type alias CommandPanel = (String, Command)

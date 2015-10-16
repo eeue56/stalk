@@ -72,6 +72,7 @@ commands = Dict.fromList
    ("log-patch", LogPatch),
 
    ("spawn", Spawn),
+   ("turtle-on", TurtleOn),
 
    -- math operations
    ("add", Add),
