@@ -38,6 +38,7 @@ type Command = Clear
   | PatchAt Argument
   | NeighboursOf Argument
 
+  | CreateStacks Argument
   | UseStack Argument
   | DropStack Argument
   | PushToShelfStack Argument

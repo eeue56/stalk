@@ -177,3 +177,11 @@ pushToShelfStack args model =
               updatedStack = xs ++ stack
             in
               { model | stackShelf <- Dict.insert name updatedStack model.stackShelf }
+
+createStacks : Argument -> Model -> Model
+createStacks args model = 
+  case args of 
+    [] -> runtimeError ["Not enough args for push!"] model
+    xs -> 
+      List.foldl (\x model -> use [x] model) model xs
+        |> use [] 

@@ -41,6 +41,7 @@ commands = Dict.fromList
    ("reduce-left", ReduceLeft),
 
    -- stack-shelf operations
+   ("create-stack", CreateStacks),
    ("use", UseStack),
    ("drop", DropStack),
    ("drop-all", always DropShelf),

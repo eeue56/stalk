@@ -56,6 +56,7 @@ runCommand lineNumber (command, stackUses) model' =
       Spawn args -> spawn args model
       TurtleOn args -> turtleOn args model
 
+      CreateStacks args -> Stack.createStacks args model
       UseStack args -> Stack.use args model
       DropStack args -> Stack.drop args model
       PushToShelfStack args -> Stack.pushToShelfStack args model
