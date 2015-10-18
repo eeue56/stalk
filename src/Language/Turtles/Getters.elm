@@ -26,7 +26,7 @@ turtleOn args model =
         (Ok x', Ok y') -> 
           case turtleAt x' y' model.turtles of 
             Nothing -> runtimeError ["No such turtle!"] model
-            Just v -> Stack.pushItem v .model
+            Just v -> Stack.pushItem v model
         _ -> runtimeError ["Failed to convert arguments to int!"] model
     x::_ -> 
       case patchFromString x of
