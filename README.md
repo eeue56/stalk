@@ -1,6 +1,6 @@
 # stalk
 
-A whitespace-inspired Netlogo clone with functional features. Not designed to work nicely. If looking for a Netlogo-like turtle library, this is not the one you're after.
+A whitespace-inspired Netlogo clone with functional features. Not designed to work nicely. If looking for a Netlogo-like turtle library, this is not the one you're after. Mainly used as a playground for trying techiniques for developing DSLs in Elm.
 
 # Background
 
