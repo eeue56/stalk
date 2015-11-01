@@ -12,23 +12,23 @@ import Convert
   Returns 0 if fails to convert from a string
 -}
 alwaysOkInt : String -> Int
-alwaysOkInt v = 
-  case String.toInt v of 
+alwaysOkInt v =
+  case String.toInt v of
     Ok x -> x
     Err _ -> log "Incorrect convert" 0
 
 -- TODO: add to elm-simple-data
-rgbFromList vals = 
-  case vals of 
+rgbFromList vals =
+  case vals of
     r::g::b::[] -> rgb (alwaysOkInt r) (alwaysOkInt g) (alwaysOkInt b)
     _ -> rgb -1 -1 -1
 
 splitFirst : String -> String -> (String, String)
 splitFirst spliter string =
-  let 
+  let
     locs = String.indexes spliter string
   in
-    case locs of 
+    case locs of
       [] -> (string, "")
       x::xs -> (String.left x string, String.dropLeft (x + 1) string)
       _ -> (string, "")
@@ -37,12 +37,12 @@ serializeRecord : String -> String
 serializeRecord record =
   let
     -- remove braces
-    record' = 
+    record' =
       String.join "~"
-      <| String.split ", "
-      <| String.trim 
-      <| String.dropLeft 1 
-      <| String.dropRight 1 record
+        <| String.split ", "
+        <| String.trim
+        <| String.dropLeft 1
+        <| String.dropRight 1 record
   in
     record'
 
@@ -53,28 +53,28 @@ levenshtein : String -> String -> Int
 levenshtein s1' s2' =
   let
     unsafeGet i j m = Convert.defaultMaybe (Matrix.get i j) 999 m
-    unsafeConcatV r m = Convert.defaultMaybe (Matrix.concatVertical r) m m 
+    unsafeConcatV r m = Convert.defaultMaybe (Matrix.concatVertical r) m m
     unsafeConcatH c m = Convert.defaultMaybe (Matrix.concatHorizontal c) m m
-    unsafeFromList xs = Convert.defaultMaybe (Matrix.fromList) (Matrix.empty) xs 
+    unsafeFromList xs = Convert.defaultMaybe (Matrix.fromList) (Matrix.empty) xs
     s1 = Array.fromList <| String.toList s1'
     s2 = Array.fromList <| String.toList s2'
     l1 = Array.length s1
-    l2 = Array.length s2
+    l2 = Array.length s2'
     cost i j = if Array.get (i-1) s1 == Array.get (j-1) s2 then 0 else 1
-    levInversion i j m = if i > 1 && 
-                       j > 1 && 
+    levInversion i j m = if i > 1 &&
+                       j > 1 &&
                        Array.get (i-1) s1 == Array.get (j-2) s2 &&
                        Array.get (j-2) s1 == Array.get (j-1) s2
-                    then min (levStep i j m) ((unsafeGet (i-2) (j-2) m) + 1) 
+                    then min (levStep i j m) ((unsafeGet (i-2) (j-2) m) + 1)
                     else levStep i j m
 
     levStep : Int -> Int -> Matrix.Matrix Int -> Int
-    levStep i j m = 
-      case 
-        List.minimum  
+    levStep i j m =
+      case
+        List.minimum
           [ unsafeGet (i-1) j m + 1
           , unsafeGet i (j-1) m + 1
-          , unsafeGet (i-1) (j-1) m + (cost i j) ] 
+          , unsafeGet (i-1) (j-1) m + (cost i j) ]
       of
        Just v -> v
        Nothing -> 0
@@ -108,15 +108,15 @@ levenshtein s1' s2' =
     ```
 -}
 takeN : Int -> List a -> Maybe (List (List a))
-takeN n xs = 
-  let 
+takeN n xs =
+  let
     len = List.length xs
   in
-    
+
     if len == 0 then Just []
     else
-        if List.length xs < n then Nothing
+        if len < n then Nothing
         else
-          case takeN n <| List.drop n xs of 
+          case takeN n <| List.drop n xs of
             Nothing -> Nothing
             Just zs -> Just <| (List.take n xs) :: (zs)

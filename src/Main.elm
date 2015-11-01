@@ -15,7 +15,7 @@ import Views exposing (..)
 {-|
   The command library is where we register Stalk commands
   Sometimes they're just aliases for exisiting commands
-  We will allow things to be added to the command library at compile 
+  We will allow things to be added to the command library at compile
   and runtime in the future.
 -}
 commands : CommandLibrary
@@ -29,7 +29,7 @@ commands = Dict.fromList
    ("jump", Jump),
 
    ("eval", Eval),
-   
+
    ("apply", ApplyRight),
    ("apply-right", ApplyRight),
    ("apply-left", ApplyLeft),
@@ -109,41 +109,44 @@ commands = Dict.fromList
   ]
 
 update : Action -> Program -> Program
-update action program = 
-  case action of 
-    UpdateText x -> { program | enteredText <- x, steps <- 0 } 
+update action program =
+  case action of
+    UpdateText x -> { program | enteredText <- x, steps <- 0 }
     Enter -> { program | model <- programRunner program.enteredText program.model }
     Reset -> { program | model <- runCommand 0 (Clear, 0) program.model, steps <- 0 }
     Step ->
       case String.split "\n" program.enteredText of
         [] -> program
         x::xs ->
-          let 
+          let
             program' = { program | model <- programRunner x program.model }
-          in 
+          in
             { program' | enteredText <- String.join "\n" xs, steps <- program'.steps + 1 }
     Noop -> program
+
+numberOfPatches = 25
+size = 750
 
 model : Model
 model = {
   errorMessage = "",
-  patches = defaultPatches 25 25,
+  patches = defaultPatches numberOfPatches numberOfPatches,
   turtles = [],
   commands = commands,
   labels = Dict.empty,
-  width = 750,
-  height = 750,
+  width = size,
+  height = size,
   stack = [],
   stackName = "global",
   stackShelf = Dict.empty,
-  patchSize =  750 / 25 }
+  patchSize =  size / numberOfPatches }
 
 program' : Program
 program' = {
   enteredText = "",
   model = model,
   steps = 0 }
-  
+
 
 enteredCommands : Signal.Mailbox Action
 enteredCommands = Signal.mailbox Noop
