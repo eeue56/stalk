@@ -2,6 +2,7 @@ module Language.Functional where
 
 import String
 import Debug exposing (log)
+import List.Extra
 
 import Model exposing (..)
 import Language.Stack as Stack
@@ -102,3 +103,32 @@ reduceRight = reduce True
 
 reduceLeft : Runner -> Argument -> Model -> Model
 reduceLeft = reduce False
+
+
+takeWhile : Runner -> Argument -> Model -> Model
+takeWhile runner args model =
+  let
+    appliedModel = applyRight runner args model
+    passed zipped = List.map (fst) <| List.Extra.takeWhile (\(x, val) -> val == "True") zipped
+  in
+    case List.length (model.stack) == List.length appliedModel.stack of
+      True ->
+        case List.map2 (,) model.stack appliedModel.stack of
+          [] -> model
+          xs -> { model | stack = passed xs }
+      False ->
+        runtimeError (["For some reason apply made a different sized stack, model stack:"] ++ model.stack ++ ["\napplied stack:"] ++ appliedModel.stack) model
+
+dropWhile : Runner -> Argument -> Model -> Model
+dropWhile runner args model =
+  let
+    appliedModel = applyRight runner args model
+    passed zipped = List.map (fst) <| List.Extra.dropWhile (\(x, val) -> val == "True") zipped
+  in
+    case List.length (model.stack) == List.length appliedModel.stack of
+      True ->
+        case List.map2 (,) model.stack appliedModel.stack of
+          [] -> model
+          xs -> { model | stack = passed xs }
+      False ->
+        runtimeError (["For some reason apply made a different sized stack, model stack:"] ++ model.stack ++ ["\napplied stack:"] ++ appliedModel.stack) model

@@ -42,6 +42,8 @@ runCommand lineNumber (command, stackUses) tempModel =
         Filter args -> filter (runCommand) args model
         ReduceRight args -> reduceRight (runCommand) args model
         ReduceLeft args -> reduceLeft (runCommand) args model
+        TakeWhile args -> takeWhile (runCommand) args model
+        DropWhile args -> dropWhile (runCommand) args model
 
         SetPcolor color -> setPcolor color model
         SetPcolorOf args -> setPcolorOf args model

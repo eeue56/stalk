@@ -199,3 +199,4 @@ replaceStackItem args model =
     [x] -> runtimeError ["Not enough args for replace"] model
     find::replace::_ ->
       { model | stack = replaceIf (\x -> x == find) replace model.stack }
+

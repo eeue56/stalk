@@ -40,6 +40,9 @@ commands = Dict.fromList
    ("reduce-right", ReduceRight),
    ("reduce-left", ReduceLeft),
 
+   ("take-while", TakeWhile),
+   ("drop-while", DropWhile),
+
    -- stack-shelf operations
    ("create-stack", CreateStacks),
    ("use", UseStack),
