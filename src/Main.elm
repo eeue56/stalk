@@ -111,17 +111,17 @@ commands = Dict.fromList
 update : Action -> Program -> Program
 update action program =
   case action of
-    UpdateText x -> { program | enteredText <- x, steps <- 0 }
-    Enter -> { program | model <- programRunner program.enteredText program.model }
-    Reset -> { program | model <- runCommand 0 (Clear, 0) program.model, steps <- 0 }
+    UpdateText x -> { program | enteredText = x, steps = 0 }
+    Enter -> { program | model = programRunner program.enteredText program.model }
+    Reset -> { program | model = runCommand 0 (Clear, 0) program.model, steps = 0 }
     Step ->
       case String.split "\n" program.enteredText of
         [] -> program
         x::xs ->
           let
-            program' = { program | model <- programRunner x program.model }
+            program' = { program | model = programRunner x program.model }
           in
-            { program' | enteredText <- String.join "\n" xs, steps <- program'.steps + 1 }
+            { program' | enteredText = String.join "\n" xs, steps = program'.steps + 1 }
     Noop -> program
 
 numberOfPatches = 25

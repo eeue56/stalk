@@ -12,20 +12,20 @@ addLabel : Argument -> Int -> Model -> Model
 addLabel args lineNumber model =
   case args of
     [] -> model
-    x::_ -> 
+    x::_ ->
       let
         name = String.trim x
-      in 
-        { model | labels <- log "labels " <| Dict.insert name lineNumber model.labels } 
+      in
+        { model | labels = log "labels " <| Dict.insert name lineNumber model.labels }
 
-jumpTo : Argument -> Model -> Model 
+jumpTo : Argument -> Model -> Model
 jumpTo args model =
-  case args of 
+  case args of
     [] -> model
     x::xs ->
-      let 
+      let
         name = String.trim x
-      in 
+      in
         case Dict.get name model.labels of
           Just v -> model
           Nothing -> runtimeError ["Label not found: " ++ name] model

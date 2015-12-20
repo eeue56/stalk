@@ -5,7 +5,6 @@ import Debug exposing (log)
 import Color exposing (Color, black, red, green, blue, rgb)
 import Matrix
 import Array
-import Convert
 
 {-|
   Only use if you can be sure that the data you're getting it an int
@@ -31,7 +30,6 @@ splitFirst spliter string =
     case locs of
       [] -> (string, "")
       x::xs -> (String.left x string, String.dropLeft (x + 1) string)
-      _ -> (string, "")
 
 serializeRecord : String -> String
 serializeRecord record =
@@ -52,15 +50,29 @@ serializeRecord record =
 levenshtein : String -> String -> Int
 levenshtein s1' s2' =
   let
-    unsafeGet i j m = Convert.defaultMaybe (Matrix.get i j) 999 m
-    unsafeConcatV r m = Convert.defaultMaybe (Matrix.concatVertical r) m m
-    unsafeConcatH c m = Convert.defaultMaybe (Matrix.concatHorizontal c) m m
-    unsafeFromList xs = Convert.defaultMaybe (Matrix.fromList) (Matrix.empty) xs
-    s1 = Array.fromList <| String.toList s1'
-    s2 = Array.fromList <| String.toList s2'
+    unsafeGet : Int -> Int -> Matrix.Matrix Int -> Int
+    unsafeGet i j m =
+      Maybe.withDefault 999 (Matrix.get i j m)
+    unsafeConcatV r m =
+      Maybe.withDefault m (Matrix.concatVertical r m)
+    unsafeConcatH c m =
+      Maybe.withDefault m (Matrix.concatHorizontal c m)
+    unsafeFromList xs =
+      Maybe.withDefault Matrix.empty (Matrix.fromList xs)
+
+    s1 : Array.Array Char
+    s1 =
+      Array.fromList <| String.toList s1'
+
+    s2 : Array.Array Char
+    s2 =
+      Array.fromList <| String.toList s2'
+
     l1 = Array.length s1
-    l2 = Array.length s2'
+    l2 = Array.length s2
+
     cost i j = if Array.get (i-1) s1 == Array.get (j-1) s2 then 0 else 1
+
     levInversion i j m = if i > 1 &&
                        j > 1 &&
                        Array.get (i-1) s1 == Array.get (j-2) s2 &&

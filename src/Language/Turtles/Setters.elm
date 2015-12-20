@@ -10,14 +10,14 @@ import String exposing (toInt)
 
 spawn : Argument -> Model -> Model
 spawn args model =
-  case args of 
-    x::y::_ -> 
+  case args of
+    x::y::_ ->
       case (toInt x, toInt y) of
         (Ok x', Ok y') ->
           let
             newTurtle = { xcor = x', ycor = y', color = orange, facing = Nothing }
           in
-            { model |  turtles <- newTurtle :: model.turtles }
+            { model |  turtles = newTurtle :: model.turtles }
         _ -> runtimeError ["Failed to convert spawn arguments!"] model
     _ -> runtimeError ["Not enough arguments for spawn!"] model
 

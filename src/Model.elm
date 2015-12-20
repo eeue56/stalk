@@ -12,7 +12,7 @@ type Action = Reset
   | Step
   | Noop
 
-type Command = Clear 
+type Command = Clear
   | Eval Argument
   | Filter Argument
   | ApplyLeft Argument
@@ -24,7 +24,7 @@ type Command = Clear
   | Jump Argument
 
   | SetPcolor Argument
-  | SetPcolorOf Argument 
+  | SetPcolorOf Argument
   | PcolorOf Argument
   | PxcorOf Argument
   | PycorOf Argument
@@ -43,7 +43,7 @@ type Command = Clear
   | DropStack Argument
   | PushToShelfStack Argument
   | DropShelf
-  | ReverseStack 
+  | ReverseStack
   | StoreStack
   | EmptyStack
   | PopOffStack Argument
@@ -73,6 +73,8 @@ type Command = Clear
   | Still
   | Failed
 
+  | Other
+
 type alias CommandLibrary = Dict.Dict String (Argument -> Command)
 
 type alias Patch = {
@@ -97,7 +99,7 @@ type alias Model = {
   turtles : List Turtle,
 
   commands : CommandLibrary,
-  
+
   width : Int,
   height : Int,
 
