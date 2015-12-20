@@ -5,6 +5,8 @@ import Parser exposing (..)
 import String exposing (toInt)
 import Dict
 
+import List.Extra exposing (replaceIf)
+
 import Parser.Errors exposing (compileError, runtimeError)
 
 emptyStack : Model -> Model
@@ -185,3 +187,15 @@ createStacks args model =
     xs ->
       List.foldl (\x model -> use [x] model) model xs
         |> use []
+
+stackSize : Model -> Model
+stackSize model =
+  pushItem (List.length model.stack) model
+
+replaceStackItem : Argument -> Model -> Model
+replaceStackItem args model =
+  case args of
+    [] -> runtimeError ["Not enough args for replace"] model
+    [x] -> runtimeError ["Not enough args for replace"] model
+    find::replace::_ ->
+      { model | stack = replaceIf (\x -> x == find) replace model.stack }

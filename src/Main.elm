@@ -56,6 +56,10 @@ commands = Dict.fromList
    ("swap", always SwapTopOfStack),
    ("top", BringToTopOfStack),
    ("reverse", always ReverseStack),
+   ("replace", ReplaceStackItem),
+   ("size", always SizeStack),
+
+   ("to-stack", StringToStack),
 
    -- setters to do with patches
    ("set-pcolor", SetPcolor),
@@ -104,7 +108,8 @@ commands = Dict.fromList
    (">=", MoreThanOrEquals),
 
    ("true", TrueTest),
-   ("false", FalseTest)
+   ("false", FalseTest),
+   ("bool-int", BoolToInt)
 
   ]
 

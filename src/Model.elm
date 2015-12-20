@@ -52,6 +52,10 @@ type Command = Clear
   | RepeatTopOfStack Argument
   | BringToTopOfStack Argument
   | SwapTopOfStack
+  | ReplaceStackItem Argument
+  | SizeStack
+
+  | StringToStack Argument
 
   | Add Argument
   | Subtract Argument
@@ -68,6 +72,7 @@ type Command = Clear
   | MoreThanOrEquals Argument
   | TrueTest Argument
   | FalseTest Argument
+  | BoolToInt Argument
 
   | CompileError Argument
   | Still

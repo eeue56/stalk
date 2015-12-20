@@ -12,6 +12,7 @@ import Language.Turtles.Getters exposing (..)
 
 import Language.Stack as Stack
 import Language.Stack exposing (..)
+import Language.Strings as Strings
 import Language.Maths exposing (..)
 import Language.Cmp exposing (..)
 import Language.Flow exposing (..)
@@ -72,6 +73,10 @@ runCommand lineNumber (command, stackUses) tempModel =
         SwapTopOfStack -> Stack.swap model
         BringToTopOfStack args -> bringToTopOfStack args model
         ReverseStack -> emptyStack model |> pushReverseToStack model.stack
+        SizeStack -> stackSize model
+        ReplaceStackItem args -> replaceStackItem args model
+
+        StringToStack args -> Strings.toStack args model
 
         Add args -> add args model
         Subtract args -> subtract args model
@@ -88,6 +93,7 @@ runCommand lineNumber (command, stackUses) tempModel =
         LessThanOrEquals args -> lessThanOrEquals args model
         TrueTest args -> true args model
         FalseTest args -> false args model
+        BoolToInt args -> boolToInt args model
 
         Label args -> addLabel args lineNumber model
         Jump args -> jumpTo args model

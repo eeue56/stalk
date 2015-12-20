@@ -64,3 +64,9 @@ false args model =
   case args of
     [] -> Stack.push ("False") model
     xs -> Stack.pushItem (not <| List.any (\x -> x == "True") xs) model
+
+boolToInt : Argument -> Model -> Model
+boolToInt args model =
+  case args of
+    [] -> runtimeError ["Not enough arguments!"] model
+    xs -> Stack.pushMany (List.map (\x -> if x == "True" then 1 else 0) xs) model
