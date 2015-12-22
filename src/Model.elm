@@ -21,6 +21,8 @@ type Command = Clear
   | ReduceLeft Argument
   | TakeWhile Argument
   | DropWhile Argument
+  | ReduceWhileRight Argument
+  | ReduceWhileLeft Argument
 
   | Label Argument
   | Jump Argument

@@ -40,8 +40,12 @@ runCommand lineNumber (command, stackUses) tempModel =
         ApplyRight args -> applyRight (runCommand) args model
         ApplyLeft args -> applyLeft (runCommand) args model
         Filter args -> filter (runCommand) args model
+
         ReduceRight args -> reduceRight (runCommand) args model
         ReduceLeft args -> reduceLeft (runCommand) args model
+        ReduceWhileRight args -> reduceWhileRight (runCommand) args model
+        ReduceWhileLeft args -> reduceWhileLeft (runCommand) args model
+
         TakeWhile args -> takeWhile (runCommand) args model
         DropWhile args -> dropWhile (runCommand) args model
 

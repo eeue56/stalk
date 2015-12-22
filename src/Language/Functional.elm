@@ -105,6 +105,59 @@ reduceLeft : Runner -> Argument -> Model -> Model
 reduceLeft = reduce False
 
 
+reduceWhile : Bool -> Runner -> Argument -> Model -> Model
+reduceWhile folder runner args model =
+  let
+    command args extraArgs model =
+      let
+        (func, args') = log "partition" <| functionPartition args
+      in
+        Parser.parse (func ++ (String.join " , " <| args' ++ extraArgs)) model
+          |> (\x-> runner 0 x model)
+  in
+    case model.stack of
+      fn::[final] ->
+        { model | stack = [final] }
+
+      fn::head::nextHead::newStack ->
+        let
+          eqApplied =
+            command args [head] { model | stack = [] }
+          isPassing =
+            case eqApplied.stack of
+              x::_ ->
+                if x == "True" then
+                  True
+                else
+                  False
+              _ -> False
+        in
+          if isPassing then
+            let
+              fnApplied : Model
+              fnApplied =
+                command [fn] [ head, nextHead ] { model | stack = newStack }
+
+              withFn : List String
+              withFn =
+                fn::fnApplied.stack
+
+
+            in
+              reduceWhile folder (runner) args { fnApplied | stack = withFn }
+          else
+            { model | stack = head::nextHead::newStack }
+      _ ->
+        runtimeError ["Stack too small to reduce!"] model
+
+
+reduceWhileRight : Runner -> Argument -> Model -> Model
+reduceWhileRight = reduceWhile True
+
+reduceWhileLeft : Runner -> Argument -> Model -> Model
+reduceWhileLeft = reduceWhile False
+
+
 takeWhile : Runner -> Argument -> Model -> Model
 takeWhile runner args model =
   let

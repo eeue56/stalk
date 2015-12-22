@@ -39,6 +39,9 @@ commands = Dict.fromList
    ("reduce", ReduceRight),
    ("reduce-right", ReduceRight),
    ("reduce-left", ReduceLeft),
+   ("reduce-while", ReduceWhileRight),
+   ("reduce-while-right", ReduceWhileRight),
+   ("reduce-while-left", ReduceWhileLeft),
 
    ("take-while", TakeWhile),
    ("drop-while", DropWhile),
