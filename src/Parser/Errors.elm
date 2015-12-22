@@ -17,7 +17,11 @@ add a compile error to the model
 -}
 compileError : Argument -> Model -> Model
 compileError messages model =
-  { model | errorMessage = String.join "\n" <| (model.errorMessage) :: messages }
+  { model
+    | errorMessage =
+      String.join "\n--------------------------------\n"
+        <| (model.errorMessage) :: messages
+  }
 
 commandSuggestions : CommandLibrary -> String -> List String
 commandSuggestions dict command =
